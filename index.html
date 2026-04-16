@@ -1177,34 +1177,215 @@ footer {
 </footer>
 
 <script>
+// ── Globals ────────────────────────────────────────────────────────────────
+let DATA            = null;
+let allPicks        = [];
+let historyFilter   = 'all';
+let historyPage     = 1;
+let currentPickFilter = 'ALL';
+const PAGE_SIZE     = 25;
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === null || n === undefined) return '—';
+  const v = parseFloat(n);
+  return (v >= 0 ? '+' : '') + v.toFixed(2) + 'u';
+}
+
+function fmtPct(n) {
+  if (n === null || n === undefined) return '—';
+  const v = parseFloat(n);
+  return (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+  const btn = document.querySelector(`[onclick="showPage('${name}')"]`);
+  if (btn) btn.classList.add('active');
+}
+
+// ── Home page ──────────────────────────────────────────────────────────────
+function renderHome() {
+  if (!DATA) return;
+  const o = DATA.overall || {};
+
+  const wEl = document.getElementById('stat-wins');
+  const lEl = document.getElementById('stat-losses');
+  const pEl = document.getElementById('stat-winpct');
+  const uEl = document.getElementById('stat-units');
+  const rEl = document.getElementById('stat-roi');
+
+  if (wEl) wEl.textContent = o.wins ?? '—';
+  if (lEl) lEl.textContent = o.losses ?? '—';
+  if (pEl) pEl.textContent = o.win_pct ? o.win_pct.toFixed(1) + '%' : '—';
+  if (uEl) { uEl.textContent = fmt(o.units); uEl.className = `stat-value ${(o.units||0) >= 0 ? 'green' : 'red'}`; }
+  if (rEl) { rEl.textContent = fmtPct(o.roi); rEl.className = `stat-value ${(o.roi||0) >= 0 ? 'green' : 'red'}`; }
+
+  const dateEl = document.getElementById('hero-date');
+  if (dateEl) dateEl.textContent = DATA.generated_date || new Date().toLocaleDateString();
+
+  const countEl = document.getElementById('picks-count');
+  allPicks = DATA.todays_picks || [];
+  if (countEl) countEl.textContent = allPicks.length + ' picks today';
+
+  filterPicks('ALL', document.querySelector('#free-tier-view .sport-tab'));
+}
+
+// ── Pick filtering ─────────────────────────────────────────────────────────
+function filterPicks(sport, btn) {
+  currentPickFilter = sport;
+  if (btn) {
+    const container = btn.closest('div');
+    if (container) container.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const filtered = sport === 'ALL' ? allPicks : allPicks.filter(p => p.sport === sport);
+  const grid = document.getElementById('picks-grid');
+  if (!grid) return;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="no-picks">No ${sport==='ALL'?'':sport+' '}free picks today</div>`;
+    return;
+  }
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  grid.innerHTML = filtered.map(p => `
+    <div class="pick-card ${p.confidence} fade-in">
+      <span class="pick-sport-badge ${p.sport}">${p.sport} · ${p.bet_type}</span>
+      <div class="pick-matchup">${p.matchup}</div>
+      <div class="pick-selection">${p.selection}</div>
+      <div class="pick-meta">
+        <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
+        <div class="pick-edge">${p.edge_pct} edge</div>
+        <div class="pick-book">@ ${p.best_book}</div>
+      </div>
+      <div class="pick-stake">
+        1u · $${p.stake.toFixed(0)} · <span style="color:${p.confidence==='High'?'var(--accent)':'#ffaa00'}">${p.confidence} confidence</span>
+        ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
+      </div>
+      <a href="/picks/${p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-')}-${today}.html"
+         style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+        View analysis →
+      </a>
+    </div>
+  `).join('');
+}
+
+// ── Record page ────────────────────────────────────────────────────────────
+function renderRecord() {
+  if (!DATA) return;
+  renderFreeVsPremium();
+  renderSportRecords();
+  renderChart();
+  renderPremiumChart();
+  renderWeeklyMonthly();
+  renderBestWorst();
+}
+
+function renderFreeVsPremium() {
+  const fo = DATA.free_overall  || {};
+  const po = DATA.premium_overall || {};
+
+  const fwl = document.getElementById('free-wl');
+  const fu  = document.getElementById('free-units-disp');
+  const fr  = document.getElementById('free-roi-disp');
+  const fw  = document.getElementById('free-winpct-disp');
+  const pwl = document.getElementById('prem-wl');
+  const pu  = document.getElementById('prem-units-disp');
+  const pr  = document.getElementById('prem-roi-disp');
+  const pw  = document.getElementById('prem-winpct-disp');
+
+  if (fwl) fwl.textContent = `${fo.wins||0} — ${fo.losses||0}`;
+  if (fu)  { fu.textContent = fmt(fo.units); fu.style.color = (fo.units||0) >= 0 ? 'var(--accent)' : 'var(--red)'; }
+  if (fr)  { fr.textContent = fmtPct(fo.roi); fr.style.color = (fo.roi||0) >= 0 ? 'var(--accent)' : 'var(--red)'; }
+  if (fw)  fw.textContent = `${(fo.win_pct||0).toFixed(1)}% win rate · ${fo.total||0} total bets`;
+
+  if (pwl) pwl.textContent = `${po.wins||0} — ${po.losses||0}`;
+  if (pu)  { pu.textContent = fmt(po.units); pu.style.color = (po.units||0) >= 0 ? 'var(--accent)' : 'var(--red)'; }
+  if (pr)  { pr.textContent = fmtPct(po.roi); pr.style.color = (po.roi||0) >= 0 ? 'var(--accent)' : 'var(--red)'; }
+  if (pw)  pw.textContent = `${(po.win_pct||0).toFixed(1)}% win rate · ${po.total||0} total bets`;
+
+  // ROI bars
+  const maxROI = Math.max(Math.abs(fo.roi||0), Math.abs(po.roi||0), 1);
+  const fb = document.getElementById('free-bar');
+  const pb = document.getElementById('prem-bar');
+  const fbl = document.getElementById('free-bar-label');
+  const pbl = document.getElementById('prem-bar-label');
+  if (fb)  fb.style.width  = Math.min(100, Math.abs((fo.roi||0) / maxROI * 100)) + '%';
+  if (pb)  pb.style.width  = Math.min(100, Math.abs((po.roi||0) / maxROI * 100)) + '%';
+  if (fbl) fbl.textContent = fmtPct(fo.roi);
+  if (pbl) pbl.textContent = fmtPct(po.roi);
+}
+
+function renderSportRecords() {
+  const el = document.getElementById('sport-records');
+  if (!el) return;
+  const sports = ['MLB','NBA','NHL'];
+  el.innerHTML = sports.map(s => {
+    const r = DATA[`sport_${s.toLowerCase()}`] || DATA[s] || {};
+    const uColor = (r.units||0) >= 0 ? 'var(--accent)' : 'var(--red)';
+    const rColor = (r.roi||0)   >= 0 ? 'var(--accent)' : 'var(--red)';
+    const bd = r.breakdown || {};
+    const bdHTML = Object.entries(bd).map(([type, rec]) => `
+      <div class="breakdown-row">
+        <span>${type}</span>
+        <span>${rec.wins}W-${rec.losses}L
+          <span style="color:${(rec.units||0)>=0?'var(--accent)':'var(--red)'}">
+            ${fmt(rec.units)}
+          </span>
+        </span>
+      </div>`).join('');
+    return `
+      <div class="sport-record-card">
+        <div class="sport-record-title">
+          <span class="sport-dot ${s}"></span>${s}
+        </div>
+        <div class="sport-wl">${r.wins||0}W — ${r.losses||0}L</div>
+        <div class="sport-roi">
+          <span style="color:${uColor}">${fmt(r.units)}</span>
+          &nbsp;·&nbsp;
+          <span style="color:${rColor}">${fmtPct(r.roi)} ROI</span>
+        </div>
+        ${bdHTML ? `<div class="sport-breakdown">${bdHTML}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function renderChart() {
+  const perf = DATA.free_daily_performance || DATA.daily_performance || [];
+  if (!perf.length) return;
+  const labels = perf.map(d => d.date ? d.date.slice(5) : '');
+  const values = perf.map(d => Math.round((d.cumulative||0) * 100) / 100);
+  const ctx = document.getElementById('units-chart');
+  if (!ctx || ctx._chart) return;
+  ctx._chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        borderColor: '#00e5b0',
+        backgroundColor: 'rgba(0,229,176,0.06)',
+        borderWidth: 2,
+        pointRadius: 2,
+        pointBackgroundColor: '#00e5b0',
+        fill: true,
+        tension: 0.3,
+      }]
+    },
     options: {
       responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f1218',
-          borderColor: '#1e2530',
-          borderWidth: 1,
-          titleColor: '#64748b',
+      plugins: { legend: { display: false },
+        tooltip: { backgroundColor: '#0f1218', borderColor: '#1e2530', borderWidth: 1,
           bodyColor: '#e2e8f0',
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}u`
-          }
+          callbacks: { label: c => ` ${c.parsed.y >= 0 ? '+' : ''}${c.parsed.y.toFixed(2)}u` }
         }
       },
       scales: {
-        x: {
-          grid: { color: 'rgba(30,37,48,0.8)' },
-          ticks: { color: '#64748b', font: { family: 'IBM Plex Mono', size: 10 } }
-        },
-        y: {
-          grid: { color: 'rgba(30,37,48,0.8)' },
-          ticks: {
-            color: '#64748b',
-            font: { family: 'IBM Plex Mono', size: 10 },
-            callback: v => `${v >= 0 ? '+' : ''}${v}u`
-          }
-        }
+        x: { grid: { color: 'rgba(30,37,48,0.8)' }, ticks: { color: '#64748b', font: { family: 'IBM Plex Mono', size: 10 } } },
+        y: { grid: { color: 'rgba(30,37,48,0.8)' }, ticks: { color: '#64748b', font: { family: 'IBM Plex Mono', size: 10 }, callback: v => `${v>=0?'+':''}${v}u` } }
       }
     }
   });
