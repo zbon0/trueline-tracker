@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T20:23:31.004358",
+  "generated_at": "2026-04-16T20:33:40.383374",
   "service_name": "True Line",
   "tracker_url": "https://trueline.bet",
   "overall": {
@@ -112,17 +112,17 @@
       "matchup": "Colorado Rockies @ Houston Astros",
       "selection": "Colorado Rockies +1.5",
       "bet_type": "Run Line",
-      "odds": -149,
+      "odds": -144,
       "best_book": "DK",
-      "edge_pct": "+5.1%",
-      "edge": 0.05,
-      "stake": 12.83,
+      "edge_pct": "+5.9%",
+      "edge": 0.06,
+      "stake": 13.18,
       "confidence": "Medium",
       "note": "Juan Mejia vs Ryan Weiss",
       "tier": "free"
     }
   ],
-  "premium_count": 18,
+  "premium_count": 16,
   "pick_history": [
     {
       "date": "2026-04-15",
@@ -3048,5 +3048,5 @@
       "confidence": "High"
     }
   ],
-  "premium_today_count": 18
+  "premium_today_count": 16
 }
