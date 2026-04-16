@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T19:57:08.427918",
+  "generated_at": "2026-04-16T20:12:27.012172",
   "service_name": "True Line",
   "tracker_url": "https://trueline.bet",
   "overall": {
@@ -108,17 +108,17 @@
       "tier": "free"
     },
     {
-      "sport": "NHL",
-      "matchup": "Philadelphia Flyers @ Pittsburgh Penguins",
-      "selection": "Pittsburgh Penguins ML",
+      "sport": "MLB",
+      "matchup": "Washington Nationals @ Pittsburgh Pirates",
+      "selection": "Pittsburgh Pirates ML",
       "bet_type": "Moneyline",
-      "odds": -135,
-      "best_book": "BetMGM",
-      "edge_pct": "+7.1%",
-      "edge": 0.07,
-      "stake": 13.61,
+      "odds": 124,
+      "best_book": "FD",
+      "edge_pct": "+5.2%",
+      "edge": 0.05,
+      "stake": 11.58,
       "confidence": "Medium",
-      "note": "Vladar vs Skinner",
+      "note": "Foster Griffin vs Braxton Ashcraft",
       "tier": "free"
     },
     {
