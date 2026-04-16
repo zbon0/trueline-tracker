@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T16:28:00.982937",
+  "generated_at": "2026-04-16T19:27:14.824993",
   "service_name": "True Line",
   "tracker_url": "https://trueline.bet",
   "overall": {
@@ -95,16 +95,16 @@
   "todays_picks": [
     {
       "sport": "MLB",
-      "matchup": "Washington Nationals @ Pittsburgh Pirates",
-      "selection": "Over 8.5",
+      "matchup": "Kansas City Royals @ Detroit Tigers",
+      "selection": "Over 7.5",
       "bet_type": "Over/Under",
       "odds": -105,
       "best_book": "DK",
       "edge_pct": "+0.8 runs vs line",
-      "edge": 0.81,
+      "edge": 0.84,
       "stake": 10.0,
       "confidence": "Medium",
-      "note": "Foster Griffin vs Braxton Ashcraft",
+      "note": "Kris Bubic vs Keider Montero",
       "tier": "free"
     },
     {
@@ -123,30 +123,16 @@
     },
     {
       "sport": "MLB",
-      "matchup": "Colorado Rockies @ Houston Astros",
-      "selection": "Colorado Rockies +1.5",
-      "bet_type": "Run Line",
-      "odds": -140,
-      "best_book": "FD",
-      "edge_pct": "+6.6%",
-      "edge": 0.07,
-      "stake": 13.45,
-      "confidence": "Medium",
-      "note": "Juan Mejia vs Ryan Weiss",
-      "tier": "free"
-    },
-    {
-      "sport": "MLB",
-      "matchup": "Washington Nationals @ Pittsburgh Pirates",
-      "selection": "Washington Nationals ML",
+      "matchup": "Texas Rangers @ Athletics",
+      "selection": "Athletics ML",
       "bet_type": "Moneyline",
-      "odds": 139,
-      "best_book": "DK",
-      "edge_pct": "+5.8%",
-      "edge": 0.06,
-      "stake": 11.57,
+      "odds": -118,
+      "best_book": "BetMGM",
+      "edge_pct": "+6.7%",
+      "edge": 0.07,
+      "stake": 12.94,
       "confidence": "Medium",
-      "note": "Foster Griffin vs Braxton Ashcraft",
+      "note": "Jack Leiter vs Jacob Lopez",
       "tier": "free"
     },
     {
@@ -155,16 +141,30 @@
       "selection": "Los Angeles Angels ML",
       "bet_type": "Moneyline",
       "odds": 245,
-      "best_book": "FD",
+      "best_book": "DK",
       "edge_pct": "+5.8%",
       "edge": 0.06,
       "stake": 10.89,
       "confidence": "Medium",
       "note": "Brent Suter vs Max Fried",
       "tier": "free"
+    },
+    {
+      "sport": "MLB",
+      "matchup": "Colorado Rockies @ Houston Astros",
+      "selection": "Colorado Rockies +1.5",
+      "bet_type": "Run Line",
+      "odds": -142,
+      "best_book": "FD",
+      "edge_pct": "+6.2%",
+      "edge": 0.06,
+      "stake": 13.32,
+      "confidence": "Medium",
+      "note": "Juan Mejia vs Ryan Weiss",
+      "tier": "free"
     }
   ],
-  "premium_count": 13,
+  "premium_count": 20,
   "pick_history": [
     {
       "date": "2026-04-15",
@@ -3090,5 +3090,5 @@
       "confidence": "High"
     }
   ],
-  "premium_today_count": 13
+  "premium_today_count": 20
 }
