@@ -378,27 +378,13 @@ main {
   border-top: 1px solid var(--border);
 }
 
-.affiliate-btn {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .05em;
-  padding: 5px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 700;
-  transition: opacity .2s;
-  margin-top: 10px;
-  width: 100%;
-  text-align: center;
-  box-sizing: border-box;
-}
 
-.affiliate-btn:hover { opacity: .85; }
-.affiliate-btn.dk  { background: #f5a623; color: #000; }
-.affiliate-btn.fd  { background: #1493ff; color: #fff; }
-.affiliate-btn.mgm { background: #c9a84c; color: #000; }
-.affiliate-btn.cae { background: #0066cc; color: #fff; }
+
+ }
+ color: #000; }
+ color: #fff; }
+ color: #000; }
+ color: #fff; }
 
 .no-picks {
   background: var(--bg2);
@@ -801,27 +787,7 @@ footer {
         No cherry-picked wins — full record, every bet, every result.
       </p>
       <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;">
-        <a href="https://www.draftkings.com/?YOUR_DK_AFFILIATE_CODE"
-           target="_blank" rel="noopener"
-           class="affiliate-btn dk" style="width:auto;padding:8px 16px;">
-          DraftKings
-        </a>
-        <a href="https://www.fanduel.com/?YOUR_FD_AFFILIATE_CODE"
-           target="_blank" rel="noopener"
-           class="affiliate-btn fd" style="width:auto;padding:8px 16px;">
-          FanDuel
-        </a>
-        <a href="https://www.betmgm.com/?YOUR_MGM_AFFILIATE_CODE"
-           target="_blank" rel="noopener"
-           class="affiliate-btn mgm" style="width:auto;padding:8px 16px;">
-          BetMGM
-        </a>
-        <a href="https://www.caesars.com/?YOUR_CAESARS_AFFILIATE_CODE"
-           target="_blank" rel="noopener"
-           class="affiliate-btn cae" style="width:auto;padding:8px 16px;">
-          Caesars
-        </a>
-      </div>
+        
     </div>
 
     <!-- Overall stats -->
@@ -917,7 +883,7 @@ footer {
           High confidence picks sent to premium subscribers at 9am ET.<br>
           Yesterday's picks visible below. Subscribe to get today's picks now.
         </div>
-        <a href="https://trueline.bet/subscribe" style="display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;background:#ffaa00;color:#000;padding:12px 28px;border-radius:6px;text-decoration:none;letter-spacing:.05em;">Subscribe $49/month →</a>
+        <a href="https://whop.com/checkout/plan_BEix8EuzzYeVa" style="display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;background:#ffaa00;color:#000;padding:12px 28px;border-radius:6px;text-decoration:none;letter-spacing:.05em;">Subscribe $49/month →</a>
         <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:12px;">
           Cancel anytime · Full record always public · No hidden losses
         </div>
@@ -1210,282 +1176,6 @@ footer {
 </footer>
 
 <script>
-// ── Affiliate links — replace with your actual affiliate URLs ──────────────
-const AFFILIATE_LINKS = {
-  DK:      "https://www.draftkings.com/?YOUR_DK_AFFILIATE_CODE",
-  FD:      "https://www.fanduel.com/?YOUR_FD_AFFILIATE_CODE",
-  BetMGM:  "https://www.betmgm.com/?YOUR_MGM_AFFILIATE_CODE",
-  Caesars: "https://www.caesars.com/?YOUR_CAESARS_AFFILIATE_CODE",
-  Best:    "https://www.draftkings.com/?YOUR_DK_AFFILIATE_CODE",
-};
-
-const BOOK_CLASS = {
-  DK: "dk", FD: "fd", BetMGM: "mgm", Caesars: "cae", Best: "dk"
-};
-
-const BOOK_LABEL = {
-  DK: "Bet on DraftKings →",
-  FD: "Bet on FanDuel →",
-  BetMGM: "Bet on BetMGM →",
-  Caesars: "Bet on Caesars →",
-  Best: "Get best odds →",
-};
-
-// ── State ──────────────────────────────────────────────────────────────────
-let DATA = null;
-let historyFilter = 'all';
-let historyPage   = 1;
-const PAGE_SIZE   = 25;
-let allPicks      = [];
-let currentPickFilter = 'ALL';
-let chartInstance = null;
-
-// ── Load data ──────────────────────────────────────────────────────────────
-async function loadData() {
-  try {
-    const r = await fetch(`tracker_data.json?t=${Date.now()}`);
-    DATA = await r.json();
-    renderAll();
-  } catch(e) {
-    console.error('Failed to load tracker data:', e);
-    document.getElementById('picks-grid').innerHTML =
-      '<div class="no-picks">Could not load data. Check back soon.</div>';
-  }
-}
-
-// ── Navigation ─────────────────────────────────────────────────────────────
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.getElementById(`page-${name}`).classList.add('active');
-  event.target.classList.add('active');
-  if (name === 'record' && DATA) renderRecord();
-  if (name === 'history' && DATA) renderHistory();
-}
-
-// ── Render all ─────────────────────────────────────────────────────────────
-function renderAll() {
-  if (!DATA) return;
-  renderHero();
-  renderStats();
-  renderPicks();
-}
-
-function renderHero() {
-  const d = new Date(DATA.generated_at);
-  document.getElementById('hero-date').textContent =
-    d.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
-  document.getElementById('footer-updated').textContent =
-    `Last updated: ${d.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})} ET`;
-  document.title = `True Line — Algorithmic Sports Picks`;
-}
-
-function fmt(val, prefix='') {
-  const n = parseFloat(val);
-  if (isNaN(n)) return '—';
-  return `${prefix}${n >= 0 ? '+' : ''}${n.toFixed(n % 1 === 0 ? 0 : 2)}`;
-}
-
-function renderStats() {
-  const o = DATA.overall;
-  document.getElementById('stat-wins').textContent    = o.wins;
-  document.getElementById('stat-losses').textContent  = o.losses;
-  document.getElementById('stat-winpct').textContent  = `${o.win_pct}%`;
-  document.getElementById('stat-units').textContent   = fmt(o.units);
-  document.getElementById('stat-roi').textContent     = `${o.roi > 0 ? '+' : ''}${o.roi}%`;
-
-  const uEl  = document.getElementById('stat-units');
-  const rEl  = document.getElementById('stat-roi');
-  uEl.className = `stat-value ${o.units >= 0 ? 'green' : 'red'}`;
-  rEl.className = `stat-value ${o.roi   >= 0 ? 'green' : 'red'}`;
-}
-
-// ── Today's picks ──────────────────────────────────────────────────────────
-function renderPicks() {
-  allPicks = DATA.todays_picks || [];
-  document.getElementById('picks-count').textContent =
-    `${allPicks.length} free pick${allPicks.length !== 1 ? 's' : ''} today`;
-  filterPicks(currentPickFilter);
-}
-
-function filterPicks(sport) {
-  currentPickFilter = sport;
-  document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
-  event?.target?.classList.add('active');
-
-  const filtered = sport === 'ALL'
-    ? allPicks
-    : allPicks.filter(p => p.sport === sport);
-
-  const grid = document.getElementById('picks-grid');
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="no-picks">No ${sport === 'ALL' ? '' : sport + ' '}picks today — edge threshold not met</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(p => `
-    <div class="pick-card ${p.confidence} fade-in">
-      <span class="pick-sport-badge ${p.sport}">${p.sport} · ${p.bet_type}</span>
-      <div class="pick-matchup">${p.matchup}</div>
-      <div class="pick-selection">${p.selection}</div>
-      <div class="pick-meta">
-        <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
-        <div class="pick-edge">${p.edge_pct} edge</div>
-        <div class="pick-book">@ ${p.best_book}</div>
-      </div>
-      <div class="pick-stake">
-        1u · $${p.stake.toFixed(0)} · <span style="color:${p.confidence === 'High' ? 'var(--accent)' : '#ffaa00'}">${p.confidence} confidence</span>
-        ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
-      </div>
-    </div>
-  `).join('');
-}
-
-// ── Record page ────────────────────────────────────────────────────────────
-function renderRecord() {
-  if (!DATA) return;
-  renderFreeVsPremium();
-  renderSportRecords();
-  renderChart();
-  renderPremiumChart();
-  renderWeeklyMonthly();
-  renderBestWorst();
-  document.getElementById('record-streak').textContent =
-    `Current streak: ${DATA.overall.streak || '—'}`;
-}
-
-function renderFreeVsPremium() {
-  // Use dedicated free_overall record if available, otherwise derive from overall - premium
-  const freeData   = DATA.free_overall || {};
-  const overall    = DATA.overall || {};
-  const premOverall = DATA.premium_overall || {};
-
-  const freeWins   = freeData.wins   !== undefined ? freeData.wins   : (overall.wins   || 0) - (premOverall.wins   || 0);
-  const freeLosses = freeData.losses !== undefined ? freeData.losses : (overall.losses || 0) - (premOverall.losses || 0);
-  const freePushes = freeData.pushes !== undefined ? freeData.pushes : (overall.pushes || 0) - (premOverall.pushes || 0);
-  const freeUnits  = freeData.units  !== undefined ? freeData.units  : (overall.units  || 0) - (premOverall.units  || 0);
-  const freeTotal  = freeWins + freeLosses + freePushes;
-  const freeRoi    = freeData.roi !== undefined ? freeData.roi : (freeTotal > 0 ? (freeUnits / freeTotal * 100) : 0);
-  const freeWinPct = freeData.win_pct !== undefined ? freeData.win_pct : ((freeWins + freeLosses) > 0
-    ? (freeWins / (freeWins + freeLosses) * 100) : 0);
-
-  const premWins    = premOverall.wins    || 0;
-  const premLosses  = premOverall.losses  || 0;
-  const premUnits   = premOverall.units   || 0;
-  const premTotal   = premOverall.total   || 0;
-  const premRoi     = premOverall.roi     || 0;
-  const premWinPct  = premOverall.win_pct || 0;
-
-  // Free stats
-  const fUCol = freeUnits >= 0 ? 'var(--accent)' : 'var(--red)';
-  const fRCol = freeRoi   >= 0 ? 'var(--accent)' : 'var(--red)';
-  document.getElementById('free-wl').textContent = `${freeWins}—${freeLosses}`;
-  const fuEl = document.getElementById('free-units-disp');
-  const frEl = document.getElementById('free-roi-disp');
-  fuEl.textContent = `${freeUnits >= 0 ? '+' : ''}${freeUnits.toFixed(1)}u`;
-  fuEl.style.color = fUCol;
-  frEl.textContent = `${freeRoi >= 0 ? '+' : ''}${freeRoi.toFixed(1)}%`;
-  frEl.style.color = fRCol;
-  document.getElementById('free-winpct-disp').textContent =
-    `${freeWinPct.toFixed(1)}% win rate · ${freeTotal} total bets`;
-
-  // Premium stats
-  const pUCol = premUnits >= 0 ? 'var(--accent)' : 'var(--red)';
-  const pRCol = premRoi   >= 0 ? 'var(--accent)' : 'var(--red)';
-  document.getElementById('prem-wl').textContent = `${premWins}—${premLosses}`;
-  const puEl = document.getElementById('prem-units-disp');
-  const prEl = document.getElementById('prem-roi-disp');
-  puEl.textContent = `${premUnits >= 0 ? '+' : ''}${premUnits.toFixed(1)}u`;
-  puEl.style.color = pUCol;
-  prEl.textContent = `${premRoi >= 0 ? '+' : ''}${premRoi.toFixed(1)}%`;
-  prEl.style.color = pRCol;
-  document.getElementById('prem-winpct-disp').textContent =
-    `${premWinPct.toFixed(1)}% win rate · ${premTotal} total bets`;
-
-  // ROI comparison bars
-  const maxRoi = Math.max(Math.abs(freeRoi), Math.abs(premRoi), 1);
-  const freeBarW = Math.min(100, Math.max(0, (freeRoi / maxRoi) * 100));
-  const premBarW = Math.min(100, Math.max(0, (premRoi / maxRoi) * 100));
-
-  setTimeout(() => {
-    document.getElementById('free-bar').style.width = `${freeBarW}%`;
-    document.getElementById('prem-bar').style.width = `${premBarW}%`;
-  }, 100);
-
-  document.getElementById('free-bar-label').textContent =
-    `${freeRoi >= 0 ? '+' : ''}${freeRoi.toFixed(1)}%`;
-  document.getElementById('free-bar-label').style.color = fRCol;
-  document.getElementById('prem-bar-label').textContent =
-    `${premRoi >= 0 ? '+' : ''}${premRoi.toFixed(1)}%`;
-  document.getElementById('prem-bar-label').style.color = pRCol;
-}
-
-function renderSportRecords() {
-  const sports = ['MLB', 'NBA', 'NHL'];
-  const colors = { MLB: 'var(--accent)', NBA: 'var(--accent2)', NHL: '#ffaa00' };
-
-  document.getElementById('sport-records').innerHTML = sports.map(s => {
-    const r  = DATA[s.toLowerCase()] || {};
-    const bd = r.breakdown || {};
-    const unitColor = (r.units || 0) >= 0 ? 'var(--accent)' : 'var(--red)';
-    const roiColor  = (r.roi   || 0) >= 0 ? 'var(--accent)' : 'var(--red)';
-
-    const breakdownHTML = Object.entries(bd).map(([type, rec]) =>
-      `<div class="breakdown-row">
-        <span>${type}</span>
-        <span>${rec.wins}W-${rec.losses}L
-          <span style="color:${rec.units >= 0 ? 'var(--accent)' : 'var(--red)'}">
-            ${rec.units >= 0 ? '+' : ''}${rec.units.toFixed(2)}u
-          </span>
-        </span>
-      </div>`
-    ).join('');
-
-    return `
-      <div class="sport-record-card">
-        <div class="sport-record-title">
-          <span class="sport-dot ${s}"></span>${s}
-        </div>
-        <div class="sport-wl">${r.wins || 0}W — ${r.losses || 0}L</div>
-        <div class="sport-roi">
-          <span style="color:${unitColor}">${(r.units || 0) >= 0 ? '+' : ''}${(r.units || 0).toFixed(2)}u</span>
-          &nbsp;·&nbsp;
-          <span style="color:${roiColor}">${(r.roi || 0) >= 0 ? '+' : ''}${(r.roi || 0).toFixed(1)}% ROI</span>
-          &nbsp;·&nbsp;
-          <span style="color:var(--muted)">Streak: ${r.streak || '—'}</span>
-        </div>
-        ${breakdownHTML ? `<div class="sport-breakdown">${breakdownHTML}</div>` : ''}
-      </div>`;
-  }).join('');
-}
-
-function renderChart() {
-  const perf = DATA.free_daily_performance || DATA.daily_performance || [];
-  if (!perf.length) return;
-
-  const labels = perf.map(d => d.date.slice(5));
-  const values = perf.map(d => d.cumulative);
-
-  if (chartInstance) chartInstance.destroy();
-
-  const ctx = document.getElementById('units-chart').getContext('2d');
-  chartInstance = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Cumulative units',
-        data: values,
-        borderColor: '#00e5b0',
-        backgroundColor: 'rgba(0,229,176,0.06)',
-        borderWidth: 2,
-        pointRadius: 3,
-        pointBackgroundColor: '#00e5b0',
-        fill: true,
-        tension: 0.3,
-      }]
-    },
     options: {
       responsive: true,
       plugins: {
@@ -1854,6 +1544,10 @@ function filterPicks(sport, btn) {
         1u · $${p.stake.toFixed(0)} · <span style="color:${p.confidence==='High'?'var(--accent)':'#ffaa00'}">${p.confidence} confidence</span>
         ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
       </div>
+      <a href="/picks/${p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-')}-${new Date().toISOString().slice(0,10).replace(/-/g,'')}.html"
+         style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+        View analysis →
+      </a>
     </div>
   `).join('');
 }
