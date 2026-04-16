@@ -1240,9 +1240,13 @@ function renderPicksBySport() {
   function pickCard(p) {
     const slug = p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
     const confColor = p.confidence === 'High' ? 'var(--accent)' : '#ffaa00';
+    const isPremium = p.is_premium || p.confidence === 'High';
     return `
       <div class="pick-card ${p.confidence} fade-in">
-        <div class="pick-matchup">${p.matchup}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div class="pick-matchup" style="margin-bottom:0;">${p.matchup}</div>
+          ${isPremium ? `<span style="font-family:var(--mono);font-size:9px;color:#ffaa00;background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);border-radius:3px;padding:2px 7px;letter-spacing:.08em;">PREMIUM</span>` : ''}
+        </div>
         <div class="pick-selection">${p.selection}</div>
         <div class="pick-meta">
           <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
@@ -1254,10 +1258,16 @@ function renderPicksBySport() {
           <span style="color:${confColor}">${p.confidence}</span>
           ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
         </div>
-        <a href="/picks/${slug}-${today}.html"
-           style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
-          View analysis →
-        </a>
+        ${isPremium
+          ? `<a href="https://whop.com/checkout/plan_BEix8EuzzYeVa"
+               style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:#ffaa00;letter-spacing:.08em;text-decoration:none;border:1px solid rgba(255,170,0,0.2);border-radius:4px;padding:4px 10px;">
+               🔒 Subscribe for full pick →
+             </a>`
+          : `<a href="/picks/${slug}-${today}.html"
+               style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+               View analysis →
+             </a>`
+        }
       </div>`;
   }
 
