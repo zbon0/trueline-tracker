@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-04-16T15:38:20.720756",
+  "generated_at": "2026-04-16T16:28:00.982937",
   "service_name": "True Line",
   "tracker_url": "https://trueline.bet",
   "overall": {
     "wins": 122,
-    "losses": 115,
+    "losses": 108,
     "pushes": 2,
-    "total": 239,
-    "units": 10.66,
-    "roi": 4.5,
-    "win_pct": 51.5,
+    "total": 232,
+    "units": 17.66,
+    "roi": 7.6,
+    "win_pct": 53.0,
     "streak": "L2"
   },
   "mlb": {
     "wins": 116,
-    "losses": 109,
+    "losses": 102,
     "pushes": 2,
-    "total": 227,
-    "units": 11.44,
-    "roi": 5.0,
-    "win_pct": 51.6,
+    "total": 220,
+    "units": 18.44,
+    "roi": 8.4,
+    "win_pct": 53.2,
     "streak": "L2",
     "breakdown": {
       "Over/Under": {
@@ -42,12 +42,12 @@
       },
       "Run Line": {
         "wins": 10,
-        "losses": 29,
+        "losses": 22,
         "pushes": 0,
-        "total": 39,
-        "units": -16.47,
-        "roi": -42.2,
-        "win_pct": 25.6
+        "total": 32,
+        "units": -9.47,
+        "roi": -29.6,
+        "win_pct": 31.2
       }
     }
   },
@@ -95,72 +95,30 @@
   "todays_picks": [
     {
       "sport": "MLB",
-      "matchup": "Colorado Rockies @ Houston Astros",
-      "selection": "Under 8.5",
+      "matchup": "Washington Nationals @ Pittsburgh Pirates",
+      "selection": "Over 8.5",
       "bet_type": "Over/Under",
-      "odds": -106,
-      "best_book": "FD",
-      "edge_pct": "-0.7 runs vs line",
-      "edge": 0.69,
+      "odds": -105,
+      "best_book": "DK",
+      "edge_pct": "+0.8 runs vs line",
+      "edge": 0.81,
       "stake": 10.0,
       "confidence": "Medium",
-      "note": "Juan Mejia vs Ryan Weiss",
+      "note": "Foster Griffin vs Braxton Ashcraft",
       "tier": "free"
     },
     {
       "sport": "MLB",
       "matchup": "Seattle Mariners @ San Diego Padres",
-      "selection": "Over 8.33",
-      "bet_type": "Over/Under",
-      "odds": -105,
-      "best_book": "DK",
-      "edge_pct": "+0.6 runs vs line",
-      "edge": 0.65,
-      "stake": 10.0,
+      "selection": "San Diego Padres ML",
+      "bet_type": "Moneyline",
+      "odds": 104,
+      "best_book": "FD",
+      "edge_pct": "+7.2%",
+      "edge": 0.07,
+      "stake": 12.58,
       "confidence": "Medium",
       "note": "Luis Castillo vs Walker Buehler",
-      "tier": "free"
-    },
-    {
-      "sport": "MLB",
-      "matchup": "Texas Rangers @ Athletics",
-      "selection": "Over 8.5",
-      "bet_type": "Over/Under",
-      "odds": -115,
-      "best_book": "DK",
-      "edge_pct": "+0.6 runs vs line",
-      "edge": 0.61,
-      "stake": 10.0,
-      "confidence": "Medium",
-      "note": "Jack Leiter vs Jacob Lopez",
-      "tier": "free"
-    },
-    {
-      "sport": "MLB",
-      "matchup": "Tampa Bay Rays @ Chicago White Sox",
-      "selection": "Over 8.33",
-      "bet_type": "Over/Under",
-      "odds": 100,
-      "best_book": "FD",
-      "edge_pct": "+0.6 runs vs line",
-      "edge": 0.57,
-      "stake": 10.0,
-      "confidence": "Medium",
-      "note": "Steven Matz vs Jordan Leasure",
-      "tier": "free"
-    },
-    {
-      "sport": "MLB",
-      "matchup": "Los Angeles Angels @ New York Yankees",
-      "selection": "Los Angeles Angels ML",
-      "bet_type": "Moneyline",
-      "odds": 245,
-      "best_book": "FD",
-      "edge_pct": "+6.8%",
-      "edge": 0.07,
-      "stake": 11.04,
-      "confidence": "Medium",
-      "note": "Brent Suter vs Max Fried",
       "tier": "free"
     },
     {
@@ -179,16 +137,30 @@
     },
     {
       "sport": "MLB",
-      "matchup": "Toronto Blue Jays @ Milwaukee Brewers",
-      "selection": "Milwaukee Brewers +1.5",
-      "bet_type": "Run Line",
-      "odds": 168,
-      "best_book": "FD",
-      "edge_pct": "+5.9%",
+      "matchup": "Washington Nationals @ Pittsburgh Pirates",
+      "selection": "Washington Nationals ML",
+      "bet_type": "Moneyline",
+      "odds": 139,
+      "best_book": "DK",
+      "edge_pct": "+5.8%",
       "edge": 0.06,
-      "stake": 11.31,
+      "stake": 11.57,
       "confidence": "Medium",
-      "note": "Patrick Corbin vs Brandon Sproat",
+      "note": "Foster Griffin vs Braxton Ashcraft",
+      "tier": "free"
+    },
+    {
+      "sport": "MLB",
+      "matchup": "Los Angeles Angels @ New York Yankees",
+      "selection": "Los Angeles Angels ML",
+      "bet_type": "Moneyline",
+      "odds": 245,
+      "best_book": "FD",
+      "edge_pct": "+5.8%",
+      "edge": 0.06,
+      "stake": 10.89,
+      "confidence": "Medium",
+      "note": "Brent Suter vs Max Fried",
       "tier": "free"
     }
   ],
@@ -1433,50 +1405,11 @@
       "date": "2026-04-13",
       "sport": "MLB",
       "matchup": "Boston Red Sox @ Minnesota Twins",
-      "selection": "Boston Red Sox +nan",
-      "bet_type": "Run Line",
-      "odds": 126,
-      "edge_pct": "+36.4%",
-      "stake": 20.82,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Cleveland Guardians @ St. Louis Cardinals",
-      "selection": "Cleveland Guardians +nan",
-      "bet_type": "Run Line",
-      "odds": 142,
-      "edge_pct": "+36.0%",
-      "stake": 19.51,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Boston Red Sox @ Minnesota Twins",
       "selection": "Boston Red Sox -1.5",
       "bet_type": "Run Line",
       "odds": 109,
       "edge_pct": "+32.8%",
       "stake": 21.27,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Texas Rangers @ Athletics",
-      "selection": "Texas Rangers +nan",
-      "bet_type": "Run Line",
-      "odds": 138,
-      "edge_pct": "+27.5%",
-      "stake": 17.46,
       "result": "L",
       "units": -1.0,
       "confidence": "High"
@@ -1492,6 +1425,45 @@
       "stake": 17.5,
       "result": "W",
       "units": 1.3,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-13",
+      "sport": "MLB",
+      "matchup": "Houston Astros @ Seattle Mariners",
+      "selection": "Seattle Mariners -1.5",
+      "bet_type": "Run Line",
+      "odds": 119,
+      "edge_pct": "+22.8%",
+      "stake": 17.2,
+      "result": "W",
+      "units": 1.19,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-13",
+      "sport": "MLB",
+      "matchup": "New York Mets @ Los Angeles Dodgers",
+      "selection": "New York Mets +1.5",
+      "bet_type": "Run Line",
+      "odds": -142,
+      "edge_pct": "+19.6%",
+      "stake": 20.44,
+      "result": "L",
+      "units": -1.0,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-13",
+      "sport": "MLB",
+      "matchup": "Arizona Diamondbacks @ Baltimore Orioles",
+      "selection": "Arizona Diamondbacks ML",
+      "bet_type": "Moneyline",
+      "odds": 122,
+      "edge_pct": "+13.5%",
+      "stake": 14.16,
+      "result": "L",
+      "units": -1.0,
       "confidence": "High"
     }
   ],
@@ -1639,30 +1611,30 @@
     },
     {
       "date": "2026-04-13",
-      "daily": -7.55,
-      "cumulative": 21.53
+      "daily": -0.55,
+      "cumulative": 28.53
     },
     {
       "date": "2026-04-14",
       "daily": -5.63,
-      "cumulative": 15.9
+      "cumulative": 22.9
     },
     {
       "date": "2026-04-15",
       "daily": -5.24,
-      "cumulative": 10.66
+      "cumulative": 17.66
     }
   ],
   "weekly_performance": [
     {
       "week": "2026-04-13",
       "wins": 46,
-      "losses": 65,
+      "losses": 58,
       "pushes": 1,
-      "total": 112,
-      "units": -18.42,
-      "roi": -16.4,
-      "win_pct": 41.4
+      "total": 105,
+      "units": -11.42,
+      "roi": -10.9,
+      "win_pct": 44.2
     },
     {
       "week": "2026-04-06",
@@ -1680,31 +1652,31 @@
       "month": "2026-04",
       "label": "April 2026",
       "wins": 122,
-      "losses": 115,
+      "losses": 108,
       "pushes": 2,
-      "total": 239,
-      "units": 10.66,
-      "roi": 4.5,
-      "win_pct": 51.5
+      "total": 232,
+      "units": 17.66,
+      "roi": 7.6,
+      "win_pct": 53.0
     }
   ],
   "free_overall": {
     "wins": 41,
-    "losses": 30,
+    "losses": 29,
     "pushes": 2,
-    "total": 73,
-    "units": 8.18,
-    "roi": 11.2,
-    "win_pct": 57.7
+    "total": 72,
+    "units": 9.18,
+    "roi": 12.8,
+    "win_pct": 58.6
   },
   "free_mlb": {
     "wins": 41,
-    "losses": 30,
+    "losses": 29,
     "pushes": 2,
-    "total": 73,
-    "units": 8.18,
-    "roi": 11.2,
-    "win_pct": 57.7
+    "total": 72,
+    "units": 9.18,
+    "roi": 12.8,
+    "win_pct": 58.6
   },
   "free_nba": {
     "wins": 0,
@@ -1762,38 +1734,38 @@
     },
     {
       "date": "2026-04-13",
-      "daily": -1.74,
-      "cumulative": 9.79
+      "daily": -0.74,
+      "cumulative": 10.79
     },
     {
       "date": "2026-04-14",
       "daily": -0.98,
-      "cumulative": 8.81
+      "cumulative": 9.81
     },
     {
       "date": "2026-04-15",
       "daily": -0.63,
-      "cumulative": 8.18
+      "cumulative": 9.18
     }
   ],
   "premium_overall": {
     "wins": 81,
-    "losses": 85,
+    "losses": 79,
     "pushes": 0,
-    "total": 166,
-    "units": 2.48,
-    "roi": 1.5,
-    "win_pct": 48.8,
+    "total": 160,
+    "units": 8.48,
+    "roi": 5.3,
+    "win_pct": 50.6,
     "streak": "L2"
   },
   "premium_mlb": {
     "wins": 75,
-    "losses": 79,
+    "losses": 73,
     "pushes": 0,
-    "total": 154,
-    "units": 3.26,
-    "roi": 2.1,
-    "win_pct": 48.7,
+    "total": 148,
+    "units": 9.26,
+    "roi": 6.3,
+    "win_pct": 50.7,
     "streak": "L2"
   },
   "premium_nba": {
@@ -2614,50 +2586,11 @@
       "date": "2026-04-13",
       "sport": "MLB",
       "matchup": "Boston Red Sox @ Minnesota Twins",
-      "selection": "Boston Red Sox +nan",
-      "bet_type": "Run Line",
-      "odds": 126,
-      "edge_pct": "+36.4%",
-      "stake": 20.82,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Cleveland Guardians @ St. Louis Cardinals",
-      "selection": "Cleveland Guardians +nan",
-      "bet_type": "Run Line",
-      "odds": 142,
-      "edge_pct": "+36.0%",
-      "stake": 19.51,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Boston Red Sox @ Minnesota Twins",
       "selection": "Boston Red Sox -1.5",
       "bet_type": "Run Line",
       "odds": 109,
       "edge_pct": "+32.8%",
       "stake": 21.27,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Texas Rangers @ Athletics",
-      "selection": "Texas Rangers +nan",
-      "bet_type": "Run Line",
-      "odds": 138,
-      "edge_pct": "+27.5%",
-      "stake": 17.46,
       "result": "L",
       "units": -1.0,
       "confidence": "High"
@@ -2686,19 +2619,6 @@
       "stake": 17.2,
       "result": "W",
       "units": 1.19,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "New York Mets @ Los Angeles Dodgers",
-      "selection": "New York Mets +nan",
-      "bet_type": "Run Line",
-      "odds": -134,
-      "edge_pct": "+21.0%",
-      "stake": 20.56,
-      "result": "L",
-      "units": -1.0,
       "confidence": "High"
     },
     {
@@ -2744,37 +2664,11 @@
       "date": "2026-04-13",
       "sport": "MLB",
       "matchup": "Miami Marlins @ Atlanta Braves",
-      "selection": "Atlanta Braves +nan",
-      "bet_type": "Run Line",
-      "odds": 150,
-      "edge_pct": "+12.8%",
-      "stake": 13.21,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Miami Marlins @ Atlanta Braves",
       "selection": "Atlanta Braves -1.5",
       "bet_type": "Run Line",
       "odds": 142,
       "edge_pct": "+11.5%",
       "stake": 13.04,
-      "result": "L",
-      "units": -1.0,
-      "confidence": "High"
-    },
-    {
-      "date": "2026-04-13",
-      "sport": "MLB",
-      "matchup": "Arizona Diamondbacks @ Baltimore Orioles",
-      "selection": "Arizona Diamondbacks +nan",
-      "bet_type": "Run Line",
-      "odds": -170,
-      "edge_pct": "+11.1%",
-      "stake": 17.08,
       "result": "L",
       "units": -1.0,
       "confidence": "High"
@@ -3113,6 +3007,84 @@
       "odds": 0,
       "edge_pct": "+20.3%",
       "stake": 16.73,
+      "result": "L",
+      "units": -1.0,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-11",
+      "sport": "MLB",
+      "matchup": "Chicago White Sox @ Kansas City Royals",
+      "selection": "Chicago White Sox ML",
+      "bet_type": "Moneyline",
+      "odds": 0,
+      "edge_pct": "+18.1%",
+      "stake": 14.28,
+      "result": "L",
+      "units": -1.0,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-11",
+      "sport": "MLB",
+      "matchup": "Arizona Diamondbacks @ Philadelphia Phillies",
+      "selection": "Arizona Diamondbacks ML",
+      "bet_type": "Moneyline",
+      "odds": 0,
+      "edge_pct": "+16.6%",
+      "stake": 15.72,
+      "result": "L",
+      "units": -1.0,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-11",
+      "sport": "MLB",
+      "matchup": "Miami Marlins @ Detroit Tigers",
+      "selection": "Detroit Tigers ML",
+      "bet_type": "Moneyline",
+      "odds": 0,
+      "edge_pct": "+16.3%",
+      "stake": 19.08,
+      "result": "W",
+      "units": 0.67,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-11",
+      "sport": "MLB",
+      "matchup": "Houston Astros @ Seattle Mariners",
+      "selection": "Seattle Mariners ML",
+      "bet_type": "Moneyline",
+      "odds": 0,
+      "edge_pct": "+13.3%",
+      "stake": 17.8,
+      "result": "W",
+      "units": 0.64,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-11",
+      "sport": "MLB",
+      "matchup": "Athletics @ New York Mets",
+      "selection": "Athletics ML",
+      "bet_type": "Moneyline",
+      "odds": 0,
+      "edge_pct": "+9.5%",
+      "stake": 12.65,
+      "result": "W",
+      "units": 1.35,
+      "confidence": "High"
+    },
+    {
+      "date": "2026-04-10",
+      "sport": "MLB",
+      "matchup": "Pittsburgh Pirates @ Chicago Cubs",
+      "selection": "Over 6.5",
+      "bet_type": "Over/Under",
+      "odds": 0,
+      "edge_pct": "+2.8 runs vs line",
+      "stake": 10.0,
       "result": "L",
       "units": -1.0,
       "confidence": "High"
