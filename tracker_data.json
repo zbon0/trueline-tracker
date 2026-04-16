@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T19:41:51.605141",
+  "generated_at": "2026-04-16T19:57:08.427918",
   "service_name": "True Line",
   "tracker_url": "https://trueline.bet",
   "overall": {
@@ -98,41 +98,27 @@
       "matchup": "Seattle Mariners @ San Diego Padres",
       "selection": "San Diego Padres ML",
       "bet_type": "Moneyline",
-      "odds": 104,
+      "odds": 102,
       "best_book": "FD",
-      "edge_pct": "+7.2%",
+      "edge_pct": "+7.0%",
       "edge": 0.07,
-      "stake": 12.58,
+      "stake": 12.57,
       "confidence": "Medium",
       "note": "Luis Castillo vs Walker Buehler",
       "tier": "free"
     },
     {
-      "sport": "MLB",
-      "matchup": "Washington Nationals @ Pittsburgh Pirates",
-      "selection": "Pittsburgh Pirates ML",
+      "sport": "NHL",
+      "matchup": "Philadelphia Flyers @ Pittsburgh Penguins",
+      "selection": "Pittsburgh Penguins ML",
       "bet_type": "Moneyline",
-      "odds": 153,
-      "best_book": "DK",
-      "edge_pct": "+5.9%",
-      "edge": 0.06,
-      "stake": 11.43,
+      "odds": -135,
+      "best_book": "BetMGM",
+      "edge_pct": "+7.1%",
+      "edge": 0.07,
+      "stake": 13.61,
       "confidence": "Medium",
-      "note": "Foster Griffin vs Braxton Ashcraft",
-      "tier": "free"
-    },
-    {
-      "sport": "MLB",
-      "matchup": "Los Angeles Angels @ New York Yankees",
-      "selection": "Los Angeles Angels -2.5",
-      "bet_type": "Run Line",
-      "odds": -113,
-      "best_book": "DK",
-      "edge_pct": "+5.4%",
-      "edge": 0.05,
-      "stake": 12.29,
-      "confidence": "Medium",
-      "note": "Brent Suter vs Max Fried",
+      "note": "Vladar vs Skinner",
       "tier": "free"
     },
     {
@@ -150,7 +136,7 @@
       "tier": "free"
     }
   ],
-  "premium_count": 22,
+  "premium_count": 21,
   "pick_history": [
     {
       "date": "2026-04-15",
@@ -3076,5 +3062,5 @@
       "confidence": "High"
     }
   ],
-  "premium_today_count": 22
+  "premium_today_count": 21
 }
