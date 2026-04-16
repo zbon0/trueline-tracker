@@ -832,16 +832,7 @@ footer {
     </div>
 
     <div id="free-tier-view">
-      <div style="display:flex;gap:2px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content;">
-        <button class="sport-tab active" onclick="filterPicks('ALL',this)">All</button>
-        <button class="sport-tab" onclick="filterPicks('MLB',this)">MLB</button>
-        <button class="sport-tab" onclick="filterPicks('NBA',this)">NBA</button>
-        <button class="sport-tab" onclick="filterPicks('NHL',this)">NHL</button>
-      </div>
-
-      <div class="picks-grid" id="picks-grid">
-        <div class="loading">Loading picks</div>
-      </div>
+      <div id="picks-by-sport"></div>
     </div>
 
     <!-- PREMIUM TIER VIEW -->
@@ -1228,11 +1219,76 @@ function renderHome() {
   const dateEl = document.getElementById('hero-date');
   if (dateEl) dateEl.textContent = DATA.generated_date || new Date().toLocaleDateString();
 
-  const countEl = document.getElementById('picks-count');
   allPicks = DATA.todays_picks || [];
+  const countEl = document.getElementById('picks-count');
   if (countEl) countEl.textContent = allPicks.length + ' picks today';
 
-  filterPicks('ALL', document.querySelector('#free-tier-view .sport-tab'));
+  renderPicksBySport();
+}
+
+function renderPicksBySport() {
+  const container = document.getElementById('picks-by-sport');
+  if (!container) return;
+
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const sports = [
+    { key: 'MLB', label: '⚾ MLB', color: 'var(--accent)' },
+    { key: 'NHL', label: '🏒 NHL', color: '#ffaa00' },
+    { key: 'NBA', label: '🏀 NBA', color: 'var(--accent2)' },
+  ];
+
+  function pickCard(p) {
+    const slug = p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
+    const confColor = p.confidence === 'High' ? 'var(--accent)' : '#ffaa00';
+    return `
+      <div class="pick-card ${p.confidence} fade-in">
+        <div class="pick-matchup">${p.matchup}</div>
+        <div class="pick-selection">${p.selection}</div>
+        <div class="pick-meta">
+          <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
+          <div class="pick-edge">${p.edge_pct} edge</div>
+          <div class="pick-book">@ ${p.best_book}</div>
+        </div>
+        <div class="pick-stake">
+          1u · $${p.stake.toFixed(0)} ·
+          <span style="color:${confColor}">${p.confidence}</span>
+          ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
+        </div>
+        <a href="/picks/${slug}-${today}.html"
+           style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+          View analysis →
+        </a>
+      </div>`;
+  }
+
+  const activeSports = sports.filter(s => allPicks.some(p => p.sport === s.key));
+
+  if (!activeSports.length) {
+    container.innerHTML = '<div class="no-picks">No picks today</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(${activeSports.length},1fr);gap:20px;align-items:start;">
+      ${activeSports.map(s => {
+        const picks = allPicks
+          .filter(p => p.sport === s.key)
+          .sort((a,b) => a.confidence === 'High' && b.confidence !== 'High' ? -1 : 1);
+        return `
+          <div>
+            <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:${s.color};
+                        text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;
+                        border-bottom:1px solid var(--border);display:flex;justify-content:space-between;
+                        align-items:center;">
+              <span>${s.label}</span>
+              <span style="color:var(--muted)">${picks.length} picks</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              ${picks.map(pickCard).join('')}
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
 }
 
 // ── Pick filtering ─────────────────────────────────────────────────────────
@@ -1715,82 +1771,25 @@ function renderPremiumTier() {
   }).join('');
 }
 
-// ── Override filterPicks to accept button element ───────────────────────────
-const _origFilter = filterPicks;
-function filterPicks(sport, btn) {
-  currentPickFilter = sport;
-  if (btn) {
-    btn.closest('.sport-tabs, div').querySelectorAll('.sport-tab')
-      .forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  const filtered = sport === 'ALL' ? allPicks : allPicks.filter(p => p.sport === sport);
-  const grid = document.getElementById('picks-grid');
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="no-picks">No ${sport==='ALL'?'':sport+' '}free picks today</div>`;
-    return;
-  }
-  grid.innerHTML = filtered.map(p => `
-    <div class="pick-card ${p.confidence} fade-in">
-      <span class="pick-sport-badge ${p.sport}">${p.sport} · ${p.bet_type}</span>
-      <div class="pick-matchup">${p.matchup}</div>
-      <div class="pick-selection">${p.selection}</div>
-      <div class="pick-meta">
-        <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
-        <div class="pick-edge">${p.edge_pct} edge</div>
-        <div class="pick-book">@ ${p.best_book}</div>
-      </div>
-      <div class="pick-stake">
-        1u · $${p.stake.toFixed(0)} · <span style="color:${p.confidence==='High'?'var(--accent)':'#ffaa00'}">${p.confidence} confidence</span>
-        ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
-      </div>
-      <a href="/picks/${p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-')}-${new Date().toISOString().slice(0,10).replace(/-/g,'')}.html"
-         style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
-        View analysis →
-      </a>
-    </div>
-  `).join('');
-}
-
-// ── Click tracking (optional analytics) ───────────────────────────────────
+// ── Click tracking ────────────────────────────────────────────────────────
 function trackClick(book, selection) {
-  // Basic click tracking — logs to console
-  // Replace with your analytics if needed (Google Analytics, etc.)
-  console.log(`Affiliate click: ${book} — ${selection}`);
+  console.log(`Click: ${book} — ${selection}`);
 }
 
 // ── Data loading ───────────────────────────────────────────────────────────
-let DATA = null;
-
 async function loadData() {
   try {
     const r = await fetch('/tracker_data.json?v=' + Date.now());
-    if (!r.ok) throw new Error('Failed to load tracker data');
+    if (!r.ok) throw new Error('Failed');
     DATA = await r.json();
     renderHome();
     renderRecord();
     renderHistory();
   } catch(e) {
     console.error('Data load failed:', e);
-    document.getElementById('overall-stats').innerHTML =
-      '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:20px;">Loading data...</div>';
+    const el = document.getElementById('overall-stats');
+    if (el) el.innerHTML = '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:20px;grid-column:1/-1;">Could not load data — try refreshing.</div>';
   }
-}
-
-function renderHome() {
-  if (!DATA) return;
-  const o = DATA.overall || {};
-  document.getElementById('stat-wins').textContent    = o.wins ?? '—';
-  document.getElementById('stat-losses').textContent  = o.losses ?? '—';
-  document.getElementById('stat-winpct').textContent  = o.win_pct ? o.win_pct.toFixed(1) + '%' : '—';
-  document.getElementById('stat-units').textContent   = o.units ? (o.units > 0 ? '+' : '') + o.units.toFixed(2) + 'u' : '—';
-  document.getElementById('stat-roi').textContent     = o.roi ? (o.roi > 0 ? '+' : '') + o.roi.toFixed(1) + '%' : '—';
-  document.getElementById('hero-date').textContent    = DATA.generated_date || new Date().toLocaleDateString();
-  document.getElementById('picks-count').textContent  = (DATA.todays_picks || []).length + ' picks today';
-
-  // Store picks globally for filtering
-  window.allPicks = DATA.todays_picks || [];
-  filterPicks('ALL', document.querySelector('.sport-tab.active'));
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
