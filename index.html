@@ -769,6 +769,7 @@ footer {
     <button class="nav-link" onclick="showPage('record')">Record</button>
     <button class="nav-link" onclick="showPage('history')">History</button>
     <button class="nav-link" onclick="showPage('how')">How it works</button>
+    <a href="/picks/" class="nav-link" style="text-decoration:none;">Picks</a>
   </div>
 </nav>
 
@@ -1557,6 +1558,40 @@ function trackClick(book, selection) {
   // Basic click tracking — logs to console
   // Replace with your analytics if needed (Google Analytics, etc.)
   console.log(`Affiliate click: ${book} — ${selection}`);
+}
+
+// ── Data loading ───────────────────────────────────────────────────────────
+let DATA = null;
+
+async function loadData() {
+  try {
+    const r = await fetch('/tracker_data.json?v=' + Date.now());
+    if (!r.ok) throw new Error('Failed to load tracker data');
+    DATA = await r.json();
+    renderHome();
+    renderRecord();
+    renderHistory();
+  } catch(e) {
+    console.error('Data load failed:', e);
+    document.getElementById('overall-stats').innerHTML =
+      '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:20px;">Loading data...</div>';
+  }
+}
+
+function renderHome() {
+  if (!DATA) return;
+  const o = DATA.overall || {};
+  document.getElementById('stat-wins').textContent    = o.wins ?? '—';
+  document.getElementById('stat-losses').textContent  = o.losses ?? '—';
+  document.getElementById('stat-winpct').textContent  = o.win_pct ? o.win_pct.toFixed(1) + '%' : '—';
+  document.getElementById('stat-units').textContent   = o.units ? (o.units > 0 ? '+' : '') + o.units.toFixed(2) + 'u' : '—';
+  document.getElementById('stat-roi').textContent     = o.roi ? (o.roi > 0 ? '+' : '') + o.roi.toFixed(1) + '%' : '—';
+  document.getElementById('hero-date').textContent    = DATA.generated_date || new Date().toLocaleDateString();
+  document.getElementById('picks-count').textContent  = (DATA.todays_picks || []).length + ' picks today';
+
+  // Store picks globally for filtering
+  window.allPicks = DATA.todays_picks || [];
+  filterPicks('ALL', document.querySelector('.sport-tab.active'));
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
