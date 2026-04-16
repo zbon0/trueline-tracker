@@ -766,10 +766,10 @@ footer {
   </a>
   <div class="nav-links">
     <button class="nav-link active" onclick="showPage('home')">Today</button>
+    <a href="/picks/" class="nav-link" style="text-decoration:none;">Picks</a>
     <button class="nav-link" onclick="showPage('record')">Record</button>
     <button class="nav-link" onclick="showPage('history')">History</button>
     <button class="nav-link" onclick="showPage('how')">How it works</button>
-    <a href="/picks/" class="nav-link" style="text-decoration:none;">Picks</a>
   </div>
 </nav>
 
@@ -1243,7 +1243,19 @@ function filterPicks(sport, btn) {
     if (container) container.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
   }
-  const filtered = sport === 'ALL' ? allPicks : allPicks.filter(p => p.sport === sport);
+  const sportOrder = { MLB: 1, NHL: 2, NBA: 3 };
+  let filtered = sport === 'ALL' ? [...allPicks] : allPicks.filter(p => p.sport === sport);
+  // Sort by date desc, then sport order, then confidence desc
+  filtered.sort((a, b) => {
+    if (a.date > b.date) return -1;
+    if (a.date < b.date) return 1;
+    const sa = sportOrder[a.sport] || 9;
+    const sb = sportOrder[b.sport] || 9;
+    if (sa !== sb) return sa - sb;
+    if (a.confidence === 'High' && b.confidence !== 'High') return -1;
+    if (b.confidence === 'High' && a.confidence !== 'High') return 1;
+    return 0;
+  });
   const grid = document.getElementById('picks-grid');
   if (!grid) return;
   if (!filtered.length) {
@@ -1533,11 +1545,17 @@ function filterHistory(f) {
 
 function renderHistoryTable() {
   const picks = DATA.pick_history || [];
+  const sportOrder = { MLB: 1, NHL: 2, NBA: 3 };
   const filtered = picks.filter(p => {
     if (historyFilter === 'all') return true;
     if (['W','L','Push'].includes(historyFilter)) return p.result === historyFilter;
     if (['MLB','NBA','NHL'].includes(historyFilter)) return p.sport === historyFilter;
     return p.bet_type === historyFilter;
+  }).sort((a, b) => {
+    // Sort by date desc, then sport order
+    if (a.date > b.date) return -1;
+    if (a.date < b.date) return 1;
+    return (sportOrder[a.sport]||9) - (sportOrder[b.sport]||9);
   });
 
   const total = filtered.length;
