@@ -1235,7 +1235,7 @@ function renderHome() {
   if (rEl) { rEl.textContent = fmtPct(o.roi); rEl.className = `stat-value ${(o.roi||0) >= 0 ? 'green' : 'red'}`; }
 
   const dateEl = document.getElementById('hero-date');
-  if (dateEl) dateEl.textContent = DATA.generated_date || new Date().toLocaleDateString();
+  if (dateEl) dateEl.textContent = DATA.generated_date || DATA.generated_at?.slice(0,10) || new Date().toLocaleDateString();
 
   allPicks = DATA.todays_picks || [];
   const countEl = document.getElementById('picks-count');
@@ -1257,14 +1257,36 @@ function renderPicksBySport() {
 
   function pickCard(p) {
     const slug = p.matchup.toLowerCase().replace(/ @ /g,'-vs-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
-    const confColor = p.confidence === 'High' ? 'var(--accent)' : '#ffaa00';
     const isPremium = p.is_premium || p.confidence === 'High';
+
+    if (isPremium) {
+      return `
+        <div class="pick-card High fade-in" style="border-color:rgba(255,170,0,0.2);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div class="pick-matchup" style="margin-bottom:0;">${p.matchup}</div>
+            <span style="font-family:var(--mono);font-size:9px;color:#ffaa00;background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);border-radius:3px;padding:2px 7px;letter-spacing:.08em;">PREMIUM</span>
+          </div>
+          <div style="background:rgba(255,170,0,0.04);border:1px solid rgba(255,170,0,0.15);border-radius:8px;padding:16px;text-align:center;margin-bottom:0;">
+            <div style="font-size:20px;margin-bottom:6px;">🔒</div>
+            <div style="font-family:var(--mono);font-size:11px;color:#ffaa00;letter-spacing:.08em;margin-bottom:4px;">High confidence pick</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px;">Model edge: ${p.edge_pct} · Subscribe to unlock</div>
+            <a href="https://whop.com/checkout/plan_BEix8EuzzYeVa"
+               style="display:inline-block;background:#ffaa00;color:#000;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:8px 18px;border-radius:4px;text-decoration:none;">
+              Subscribe $49/month →
+            </a>
+          </div>
+          <div style="margin-top:10px;">
+            <a href="/picks/${slug}-${today}.html"
+               style="display:inline-block;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+              View game analysis →
+            </a>
+          </div>
+        </div>`;
+    }
+
     return `
-      <div class="pick-card ${p.confidence} fade-in">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div class="pick-matchup" style="margin-bottom:0;">${p.matchup}</div>
-          ${isPremium ? `<span style="font-family:var(--mono);font-size:9px;color:#ffaa00;background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);border-radius:3px;padding:2px 7px;letter-spacing:.08em;">PREMIUM</span>` : ''}
-        </div>
+      <div class="pick-card Medium fade-in">
+        <div class="pick-matchup">${p.matchup}</div>
         <div class="pick-selection">${p.selection}</div>
         <div class="pick-meta">
           <div class="pick-odds">${p.odds > 0 ? '+' : ''}${p.odds}</div>
@@ -1273,19 +1295,13 @@ function renderPicksBySport() {
         </div>
         <div class="pick-stake">
           1u · $${p.stake.toFixed(0)} ·
-          <span style="color:${confColor}">${p.confidence}</span>
+          <span style="color:#ffaa00;">Medium</span>
           ${p.note ? `<span style="color:var(--muted)"> · ${p.note}</span>` : ''}
         </div>
-        ${isPremium
-          ? `<a href="https://whop.com/checkout/plan_BEix8EuzzYeVa"
-               style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:#ffaa00;letter-spacing:.08em;text-decoration:none;border:1px solid rgba(255,170,0,0.2);border-radius:4px;padding:4px 10px;">
-               🔒 Subscribe for full pick →
-             </a>`
-          : `<a href="/picks/${slug}-${today}.html"
-               style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
-               View analysis →
-             </a>`
-        }
+        <a href="/picks/${slug}-${today}.html"
+           style="display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-decoration:none;border:1px solid rgba(0,229,176,0.2);border-radius:4px;padding:4px 10px;">
+          View analysis →
+        </a>
       </div>`;
   }
 
@@ -1420,7 +1436,7 @@ function renderSportRecords() {
   if (!el) return;
   const sports = ['MLB','NBA','NHL'];
   el.innerHTML = sports.map(s => {
-    const r = DATA[`sport_${s.toLowerCase()}`] || DATA[s] || {};
+    const r = DATA[`sport_${s.toLowerCase()}`] || DATA[s.toLowerCase()] || DATA[s] || {};
     const uColor = (r.units||0) >= 0 ? 'var(--accent)' : 'var(--red)';
     const rColor = (r.roi||0)   >= 0 ? 'var(--accent)' : 'var(--red)';
     const bd = r.breakdown || {};
