@@ -739,17 +739,37 @@ footer {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Responsive ── */
 @media (max-width: 768px) {
-  nav { padding: 0 16px; gap: 12px; }
-  main { padding: 28px 16px 60px; }
+  .sport-cols-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Mobile responsive ── */
+@media (max-width: 768px) {
+  nav { padding: 0 16px; gap: 8px; height: auto; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+  .nav-links { gap: 2px; flex-wrap: wrap; margin-left: 0; width: 100%; }
+  .nav-link { font-size: 10px; padding: 5px 10px; }
+  main { padding: 20px 16px 60px; }
+  .hero { margin-bottom: 32px; padding-bottom: 32px; }
+  .hero h1 { font-size: 42px; }
   .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .stat-cell { padding: 16px 12px; }
+  .stat-value { font-size: 26px; }
   .sport-records { grid-template-columns: 1fr; }
   .bw-grid { grid-template-columns: 1fr; }
   .how-grid { grid-template-columns: 1fr; }
   .picks-grid { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 48px; }
-  footer { flex-direction: column; gap: 8px; text-align: center; }
+  .pick-card { padding: 16px; }
+  .pick-odds { font-size: 18px; }
+  footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
+  .chart-wrap { padding: 16px; }
+  table { font-size: 11px; }
+  td, th { padding: 8px 10px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 32px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  nav { position: relative; }
 }
 </style>
 </head>
@@ -787,9 +807,7 @@ footer {
         Algorithmic picks for MLB, NBA, and NHL. Every pick is tracked publicly.
         No cherry-picked wins — full record, every bet, every result.
       </p>
-      <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;">
-        
-    </div>
+    </div><!-- end hero -->
 
     <!-- Overall stats -->
     <div class="stats-grid fade-in" id="overall-stats">
@@ -1279,7 +1297,7 @@ function renderPicksBySport() {
   }
 
   container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(${activeSports.length},1fr);gap:20px;align-items:start;">
+    <div style="display:grid;grid-template-columns:repeat(${activeSports.length},1fr);gap:20px;align-items:start;" class="sport-cols-grid">
       ${activeSports.map(s => {
         const picks = allPicks
           .filter(p => p.sport === s.key)
