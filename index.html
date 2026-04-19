@@ -786,7 +786,6 @@ footer {
   </a>
   <div class="nav-links">
     <button class="nav-link active" onclick="showPage('home')">Today</button>
-    <a href="/picks/" class="nav-link" style="text-decoration:none;">Picks</a>
     <button class="nav-link" onclick="showPage('record')">Record</button>
     <button class="nav-link" onclick="showPage('history')">History</button>
     <button class="nav-link" onclick="showPage('how')">How it works</button>
@@ -838,103 +837,15 @@ footer {
       </div>
     </div>
 
-    <!-- Today's picks -->
-    <div class="section-header">
-      <div class="section-title">Today's picks</div>
-      <div class="section-count" id="picks-count">—</div>
-    </div>
-
-    <div style="display:flex;gap:2px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content;">
-      <button class="sport-tab active" id="tier-free-btn" onclick="showTier('free')">Free picks</button>
-      <button class="sport-tab" id="tier-premium-btn" onclick="showTier('premium')">Premium picks 🔒</button>
-    </div>
-
-    <div id="free-tier-view">
-      <div id="picks-by-sport"></div>
-    </div>
-
-    <!-- PREMIUM TIER VIEW -->
-    <div id="premium-tier-view" style="display:none;">
-
-      <!-- Premium record stats -->
-      <div class="stats-grid fade-in" id="premium-stats" style="margin-bottom:32px;">
-        <div class="stat-cell">
-          <div class="stat-label">Premium W</div>
-          <div class="stat-value green" id="pstat-wins">—</div>
-          <div class="stat-sub">wins</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Premium L</div>
-          <div class="stat-value red" id="pstat-losses">—</div>
-          <div class="stat-sub">losses</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Win rate</div>
-          <div class="stat-value white" id="pstat-winpct">—</div>
-          <div class="stat-sub">win %</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Units</div>
-          <div class="stat-value green" id="pstat-units">—</div>
-          <div class="stat-sub">total units</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">ROI</div>
-          <div class="stat-value green" id="pstat-roi">—</div>
-          <div class="stat-sub">return</div>
-        </div>
+    <!-- Validation mode banner -->
+    <div style="background:rgba(255,170,0,0.04);border:1px solid rgba(255,170,0,0.25);border-radius:10px;padding:32px 28px;margin-bottom:32px;">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#ffaa00;text-transform:uppercase;margin-bottom:12px;">Validation Mode · April 2026</div>
+      <div style="font-family:var(--display);font-size:26px;color:var(--text);letter-spacing:.02em;margin-bottom:14px;line-height:1.2;">
+        Building the track record<br>before we go public.
       </div>
-
-      <!-- Today's premium picks — locked -->
-      <div id="premium-today-locked" style="background:rgba(255,170,0,0.04);border:1px solid rgba(255,170,0,0.25);border-radius:10px;padding:28px;text-align:center;margin-bottom:32px;">
-        <div style="font-size:32px;margin-bottom:12px;">🔒</div>
-        <div style="font-size:17px;font-weight:500;margin-bottom:6px;" id="premium-locked-count">Loading...</div>
-        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:20px;">
-          High confidence picks sent to premium subscribers at 9am ET.<br>
-          Yesterday's picks visible below. Subscribe to get today's picks now.
-        </div>
-        <a href="https://whop.com/checkout/plan_BEix8EuzzYeVa" style="display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;background:#ffaa00;color:#000;padding:12px 28px;border-radius:6px;text-decoration:none;letter-spacing:.05em;">Subscribe $49/month →</a>
-        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:12px;">
-          Cancel anytime · Full record always public · No hidden losses
-        </div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.7;max-width:600px;">
+        True Line is currently in private validation. We're tracking every pick internally to measure <strong style="color:var(--text);">Closing Line Value</strong> — the industry standard for proving real edge. Picks will resume publicly once we've validated the model across 500+ bets with positive CLV. Historical record below is fully transparent — nothing hidden.
       </div>
-
-      <!-- Premium sport records -->
-      <div class="section-header">
-        <div class="section-title">Premium record by sport</div>
-        <div class="section-count" id="premium-streak">—</div>
-      </div>
-      <div class="sport-records" id="premium-sport-records" style="margin-bottom:32px;">
-        <div class="loading">Loading</div>
-      </div>
-
-      <!-- Premium pick history -->
-      <div class="section-header">
-        <div class="section-title">Premium pick history</div>
-        <div class="section-count" id="premium-hist-count">—</div>
-      </div>
-      <div class="table-wrap">
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Sport</th>
-                <th>Pick</th>
-                <th>Type</th>
-                <th>Odds</th>
-                <th>Edge</th>
-                <th>Result</th>
-                <th>Units</th>
-              </tr>
-            </thead>
-            <tbody id="premium-history-tbody">
-              <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px;">Loading...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -1238,10 +1149,6 @@ function renderHome() {
   if (dateEl) dateEl.textContent = DATA.generated_date || DATA.generated_at?.slice(0,10) || new Date().toLocaleDateString();
 
   allPicks = DATA.todays_picks || [];
-  const countEl = document.getElementById('picks-count');
-  if (countEl) countEl.textContent = allPicks.length + ' picks today';
-
-  renderPicksBySport();
 }
 
 function renderPicksBySport() {
