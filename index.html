@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>True Line — Algorithmic MLB Picks</title>
-<meta name="description" content="Validated algorithmic picks for MLB. Verifiable closing line value. Full transparency on methodology and live record.">
+<title>True Line — Calibrated World Cup Predictions, Graded in Public</title>
+<meta name="description" content="A transparent, calibrated model for the 2026 World Cup. Every prediction published before kickoff and graded in public. No cherry-picking, no hype.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -14,632 +14,99 @@
   --bg3:       #161b23;
   --border:    #1e2530;
   --border2:   #2a3340;
-
   --accent:    #00e5b0;
   --accent-dim:#0099ff;
   --amber:     #ffaa00;
   --red:       #ff4466;
-
   --text:      #e2e8f0;
   --muted:     #64748b;
-
   --mono:      'IBM Plex Mono', monospace;
   --display:   'Bebas Neue', sans-serif;
   --sans:      'DM Sans', sans-serif;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  line-height: 1.6;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,229,176,0.012) 2px, rgba(0,229,176,0.012) 4px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Nav ── */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(8,10,13,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  display: flex;
-  align-items: center;
-  height: 56px;
-  gap: 32px;
-}
-
-.nav-brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-
-.nav-brand {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.05em;
-  color: var(--accent);
-}
-
-.nav-links {
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-}
-
-.nav-link {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 4px;
-  transition: all 0.2s;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-weight: 400;
-}
-
-.nav-link:hover, .nav-link.active {
-  color: var(--accent);
-  background: rgba(0,229,176,0.06);
-}
-
-main {
-  position: relative;
-  z-index: 1;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 56px 32px 80px;
-}
-
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,176,0.012) 2px, rgba(0,229,176,0.012) 4px); pointer-events: none; z-index: 0; }
+nav { position: sticky; top: 0; z-index: 100; background: rgba(8,10,13,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; height: 56px; gap: 32px; }
+.nav-brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-brand { font-family: var(--display); font-size: 22px; letter-spacing: 0.05em; color: var(--accent); }
+.nav-links { display: flex; gap: 4px; margin-left: auto; }
+.nav-link { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; padding: 6px 14px; border-radius: 4px; transition: all 0.2s; cursor: pointer; background: none; border: none; font-weight: 400; }
+.nav-link:hover, .nav-link.active { color: var(--accent); background: rgba(0,229,176,0.06); }
+main { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 56px 32px 80px; }
 .page { display: none; }
 .page.active { display: block; }
-
-/* ── Hero ── */
-.hero {
-  margin-bottom: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-.hero-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.live-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--amber);
-  animation: blink 2s ease-in-out infinite;
-  display: inline-block;
-}
-
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0.3; }
-}
-
-.hero h1 {
-  font-family: var(--display);
-  font-size: clamp(48px, 7vw, 88px);
-  line-height: 0.95;
-  letter-spacing: 0.02em;
-  margin-bottom: 22px;
-}
-
-.hero h1 em {
-  font-style: normal;
-  color: var(--accent);
-}
-
-.hero-sub {
-  font-size: 15px;
-  color: var(--muted);
-  max-width: 580px;
-  font-weight: 300;
-  line-height: 1.7;
-}
-
-/* ── Status disclosure ── */
-.status-disclosure {
-  background: rgba(255,170,0,0.04);
-  border: 1px solid rgba(255,170,0,0.22);
-  border-radius: 10px;
-  padding: 22px 24px;
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.status-disclosure-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--amber);
-  text-transform: uppercase;
-}
-
-.status-disclosure-text {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.6;
-}
-
-.status-disclosure-text a {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--accent);
-}
-
-/* ── Section heading ── */
-.section-eyebrow {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.section-heading {
-  font-family: var(--display);
-  font-size: 36px;
-  letter-spacing: 0.02em;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.section-heading-tag {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  padding: 3px 10px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  font-weight: 400;
-}
-
+.hero { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); animation: blink 2s ease-in-out infinite; display: inline-block; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.hero h1 { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); line-height: 0.95; letter-spacing: 0.02em; margin-bottom: 22px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-sub { font-size: 15px; color: var(--muted); max-width: 600px; font-weight: 300; line-height: 1.7; }
+.status-disclosure { background: rgba(0,229,176,0.04); border: 1px solid rgba(0,229,176,0.22); border-radius: 10px; padding: 22px 24px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+.status-disclosure-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; }
+.status-disclosure-text { font-size: 14px; color: var(--text); line-height: 1.6; }
+.status-disclosure-text a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+.section-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.section-heading { font-family: var(--display); font-size: 36px; letter-spacing: 0.02em; margin-bottom: 8px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.section-heading-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 400; }
 .section-heading-tag.deployed { color: var(--accent); background: rgba(0,229,176,0.08); border: 1px solid rgba(0,229,176,0.3); }
-.section-heading-tag.dev      { color: var(--amber);  background: rgba(255,170,0,0.08); border: 1px solid rgba(255,170,0,0.3); }
-.section-heading-tag.backtest { color: var(--accent-dim); background: rgba(0,153,255,0.08); border: 1px solid rgba(0,153,255,0.3); }
-
-.section-blurb {
-  font-size: 14px;
-  color: var(--muted);
-  margin-bottom: 24px;
-  max-width: 720px;
-  line-height: 1.65;
-}
-
-.section-divider {
-  margin: 56px 0 36px;
-  height: 1px;
-  background: var(--border);
-}
-
-.subsection-eyebrow {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: 32px;
-  margin-bottom: 8px;
-}
-
-.subsection-heading {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.02em;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-/* ── Stats grid ── */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 2px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-
-.stat-cell {
-  background: var(--bg2);
-  padding: 22px 18px;
-  text-align: center;
-}
-
-.stat-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.stat-value {
-  font-family: var(--display);
-  font-size: 36px;
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
+.section-heading-tag.dev { color: var(--amber); background: rgba(255,170,0,0.08); border: 1px solid rgba(255,170,0,0.3); }
+.section-heading-tag.live { color: var(--accent); background: rgba(0,229,176,0.08); border: 1px solid rgba(0,229,176,0.3); }
+.section-blurb { font-size: 14px; color: var(--muted); margin-bottom: 24px; max-width: 720px; line-height: 1.65; }
+.section-divider { margin: 56px 0 36px; height: 1px; background: var(--border); }
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+.stat-cell { background: var(--bg2); padding: 22px 18px; text-align: center; }
+.stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+.stat-value { font-family: var(--display); font-size: 36px; letter-spacing: 0.02em; line-height: 1; }
 .stat-value.green { color: var(--accent); }
-.stat-value.blue  { color: var(--accent-dim); }
-.stat-value.text  { color: var(--text); }
+.stat-value.blue { color: var(--accent-dim); }
+.stat-value.text { color: var(--text); }
 .stat-value.muted { color: var(--muted); }
-.stat-value.amber { color: var(--amber); }
-.stat-value.red   { color: var(--red); }
-
-.stat-sub {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  color: var(--muted);
-  margin-top: 6px;
-  letter-spacing: 0.05em;
-}
-
-/* ── Halves table ── */
-.halves-table-wrap {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-
-.halves-table-header {
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  text-transform: uppercase;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.consistency-badge {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  text-transform: none;
-}
-
-.halves-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.halves-table th {
-  background: var(--bg3);
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  text-transform: uppercase;
-  padding: 10px 22px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-.halves-table td {
-  padding: 12px 22px;
-  border-bottom: 1px solid rgba(30,37,48,0.6);
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-.halves-table tr:last-child td { border-bottom: none; }
-.halves-table tr.total-row td {
-  background: rgba(0,229,176,0.03);
-  border-top: 1px solid rgba(0,229,176,0.15);
-  font-weight: 700;
-}
-
-.halves-table .pos { color: var(--accent); }
-.halves-table .neg { color: var(--red); }
-.halves-table .neu { color: var(--muted); }
-
-/* ── Live callout (pre-launch) ── */
-.live-callout {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 32px;
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.live-callout-pre {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.live-callout-zero {
-  font-family: var(--display);
-  font-size: 56px;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  margin-bottom: 8px;
-  line-height: 1;
-}
-
-.live-callout-text {
-  font-size: 14px;
-  color: var(--muted);
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* ── In-development cards ── */
-.dev-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.dev-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--amber);
-  border-radius: 6px 10px 10px 6px;
-  padding: 22px 24px;
-}
-
-.dev-card-title {
-  font-family: var(--display);
-  font-size: 26px;
-  letter-spacing: 0.02em;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-.dev-card-status {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--amber);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.dev-card-body {
-  font-size: 13.5px;
-  color: var(--muted);
-  line-height: 1.65;
-  margin-bottom: 12px;
-}
-
-.dev-card-stat-row {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.dev-card-stat-row strong {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.dev-card-stat-row .clv-pos { color: var(--accent); }
-.dev-card-stat-row .clv-neu { color: var(--muted); }
-
-/* ── Methodology row layout ── */
-.methodology {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 32px;
-  margin-bottom: 28px;
-}
-
-.method-row {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 24px;
-  padding: 18px 0;
-  border-bottom: 1px solid rgba(30,37,48,0.6);
-}
-
+.stat-sub { font-family: var(--mono); font-size: 9.5px; color: var(--muted); margin-top: 6px; letter-spacing: 0.05em; }
+.match-table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+.match-table-header { padding: 14px 22px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.match-table { width: 100%; border-collapse: collapse; }
+.match-table th { background: var(--bg3); font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; padding: 10px 18px; text-align: left; border-bottom: 1px solid var(--border); }
+.match-table td { padding: 13px 18px; border-bottom: 1px solid rgba(30,37,48,0.6); font-family: var(--mono); font-size: 12px; vertical-align: middle; }
+.match-table tr:last-child td { border-bottom: none; }
+.match-table .teams { font-family: var(--sans); font-size: 13.5px; color: var(--text); font-weight: 400; }
+.match-table .date-cell { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.prob { font-family: var(--mono); font-size: 12px; }
+.prob.fav { color: var(--accent); font-weight: 500; }
+.prob.mid { color: var(--text); }
+.prob.dog { color: var(--muted); }
+.pick-pill { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(0,229,176,0.08); color: var(--accent); border: 1px solid rgba(0,229,176,0.2); white-space: nowrap; }
+.host-tag { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; color: var(--amber); margin-left: 6px; text-transform: uppercase; }
+.hit-yes { color: var(--accent); }
+.hit-no { color: var(--red); }
+.live-callout { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 40px 32px; text-align: center; margin-bottom: 28px; }
+.live-callout-pre { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
+.live-callout-zero { font-family: var(--display); font-size: 48px; letter-spacing: 0.02em; color: var(--muted); margin-bottom: 8px; line-height: 1; }
+.live-callout-text { font-size: 14px; color: var(--muted); max-width: 520px; margin: 0 auto; line-height: 1.6; }
+.methodology { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 32px; margin-bottom: 28px; }
+.method-row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid rgba(30,37,48,0.6); }
 .method-row:last-child { border-bottom: none; padding-bottom: 0; }
 .method-row:first-child { padding-top: 0; }
-
-.method-row-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  text-transform: uppercase;
-  padding-top: 2px;
-}
-
-.method-row-body {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.method-row-body strong {
-  color: var(--accent);
-  font-weight: 500;
-}
-
-.method-row-body code {
-  font-family: var(--mono);
-  font-size: 12px;
-  background: var(--bg3);
-  padding: 2px 6px;
-  border-radius: 3px;
-  color: var(--text);
-}
-
-.history-note {
-  background: rgba(255,170,0,0.04);
-  border-left: 2px solid var(--amber);
-  padding: 14px 18px;
-  margin-top: 14px;
-  font-size: 13.5px;
-  color: var(--muted);
-  line-height: 1.6;
-  border-radius: 0 4px 4px 0;
-}
-
+.method-row-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; padding-top: 2px; }
+.method-row-body { font-size: 14px; line-height: 1.6; color: var(--text); }
+.method-row-body strong { color: var(--accent); font-weight: 500; }
+.method-row-body code { font-family: var(--mono); font-size: 12px; background: var(--bg3); padding: 2px 6px; border-radius: 3px; color: var(--text); }
+.calib-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.calib-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.calib-table td { font-family: var(--mono); font-size: 11.5px; padding: 8px 12px; border-bottom: 1px solid rgba(30,37,48,0.5); }
+.calib-table tr:last-child td { border-bottom: none; }
+.disclaimer { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; padding: 16px 22px; font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
+.history-note { background: rgba(255,170,0,0.04); border-left: 2px solid var(--amber); padding: 14px 18px; margin-top: 14px; font-size: 13.5px; color: var(--muted); line-height: 1.6; border-radius: 0 4px 4px 0; }
 .history-note strong { color: var(--text); }
-
-.disclaimer {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--amber);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 22px;
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 32px;
-}
-
-/* ── Today page (empty state) ── */
-.today-empty {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 56px 32px;
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.today-empty-eyebrow {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.today-empty-title {
-  font-family: var(--display);
-  font-size: 32px;
-  letter-spacing: 0.02em;
-  color: var(--text);
-  margin-bottom: 12px;
-  line-height: 1.1;
-}
-
-.today-empty-text {
-  font-size: 14px;
-  color: var(--muted);
-  max-width: 460px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* ── History page (empty state) ── */
-.history-empty {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 80px 32px;
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-/* ── Footer ── */
-footer {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 26px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-}
-
-footer a {
-  color: var(--muted);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--muted);
-}
-
-footer a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-/* ── Animations ── */
 .fade-in { animation: fadeIn 0.5s ease forwards; }
 .fade-in.d2 { animation-delay: 0.06s; opacity: 0; }
 .fade-in.d3 { animation-delay: 0.12s; opacity: 0; }
-.fade-in.d4 { animation-delay: 0.18s; opacity: 0; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Mobile ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 26px 40px; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+footer a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted); }
+footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 @media (max-width: 768px) {
   nav { padding: 0 16px; gap: 8px; height: auto; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
   .nav-links { gap: 2px; flex-wrap: wrap; margin-left: 0; width: 100%; }
@@ -647,27 +114,22 @@ footer a:hover {
   main { padding: 28px 16px 60px; }
   .hero { margin-bottom: 16px; padding-bottom: 24px; }
   .hero h1 { font-size: 38px; }
-  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-cell { padding: 16px 10px; }
   .stat-value { font-size: 26px; }
-  .dev-grid { grid-template-columns: 1fr; }
   .method-row { grid-template-columns: 1fr; gap: 6px; }
-  .live-callout-zero { font-size: 42px; }
+  .live-callout-zero { font-size: 38px; }
   .section-heading { font-size: 28px; flex-direction: column; align-items: flex-start; gap: 6px; }
-  .halves-table th, .halves-table td { padding: 8px 10px; font-size: 11px; }
+  .match-table th, .match-table td { padding: 8px 10px; font-size: 11px; }
+  .match-table .teams { font-size: 12px; }
   footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
-}
-
-@media (max-width: 480px) {
-  .hero h1 { font-size: 32px; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#" onclick="showPage('today'); return false;" class="nav-brand-wrap">
+  <a href="#" onclick="showPage('matches'); return false;" class="nav-brand-wrap">
     <svg width="32" height="32" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="400" rx="80" fill="#080a0d"/>
       <text x="200" y="248" font-family="serif" font-size="220" fill="#00e5b0" text-anchor="middle">TL</text>
@@ -676,346 +138,264 @@ footer a:hover {
     <span class="nav-brand">True Line</span>
   </a>
   <div class="nav-links">
-    <button class="nav-link active" onclick="showPage('today')">Today</button>
-    <button class="nav-link" onclick="showPage('record')">Record</button>
-    <button class="nav-link" onclick="showPage('history')">History</button>
+    <button class="nav-link active" onclick="showPage('matches')">Matches</button>
+    <button class="nav-link" onclick="showPage('ledger')">Open Ledger</button>
     <button class="nav-link" onclick="showPage('how')">How it works</button>
+    <button class="nav-link" onclick="showPage('mlb')">MLB</button>
   </div>
 </nav>
 
 <main>
 
-  <!-- ══ TODAY ══ -->
-  <div class="page active" id="page-today">
-
+  <!-- ══ MATCHES (flagship) ══ -->
+  <div class="page active" id="page-matches">
     <section class="hero fade-in">
       <div class="hero-eyebrow">
         <span class="live-dot"></span>
-        <span id="hero-date">May 5, 2026 · Pre-launch</span>
+        <span id="hero-date">World Cup 2026 · Predictions live</span>
       </div>
-      <h1>Picks backed<br>by <em>data.</em></h1>
+      <h1>The line,<br>in the <em>open.</em></h1>
       <p class="hero-sub">
-        Algorithmic Run Line picks for MLB. Validated against 1.5 seasons of historical
-        odds. Every pick tracked publicly with opening odds, closing line value, and
-        outcomes. No cherry-picked wins.
+        Calibrated win/draw/loss probabilities for every 2026 World Cup match — published
+        before kickoff and graded in public, win or lose. Not tips, not hype: an honest
+        model, validated against 20 years of World Cups, with its record laid bare.
       </p>
     </section>
 
     <div class="status-disclosure fade-in d2">
-      <div class="status-disclosure-label">Status — May 2026</div>
+      <div class="status-disclosure-label">What this is — and isn't</div>
       <div class="status-disclosure-text">
-        Currently posting <strong>Run Line picks only</strong>, the single market that has
-        validated against our deployment criteria (positive ROI and CLV across 4 of 4
-        independent backtest periods). Moneyline and Over/Under remain in development —
-        see <a href="#" onclick="showPage('how'); return false;">How it works</a>.
+        These are <strong>calibrated probabilities</strong>, not claims to beat the bookmakers.
+        When the model says 60%, things happen about 60% of the time — verified across 320
+        World Cup matches (2006–2022), Brier score 0.150. Every prediction is timestamped and
+        graded on the <a href="#" onclick="showPage('ledger'); return false;">Open Ledger</a>.
+        See <a href="#" onclick="showPage('how'); return false;">How it works</a>.
       </div>
     </div>
 
     <section class="fade-in d3">
-      <div class="section-eyebrow">Today's pick</div>
+      <div class="section-eyebrow">Upcoming matches</div>
       <div class="section-heading">
-        Run Line
-        <span class="section-heading-tag deployed">Deployed</span>
-      </div>
-
-      <div class="today-empty" id="today-pick-empty">
-        <div class="today-empty-eyebrow">Public picks begin at launch</div>
-        <div class="today-empty-title">No picks yet</div>
-        <div class="today-empty-text">
-          Daily Run Line picks will start publishing here once production deployment
-          completes. Each pick will be posted before games begin with the opening DraftKings
-          price, then graded automatically.
-        </div>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ══ RECORD ══ -->
-  <div class="page" id="page-record">
-
-    <section class="fade-in">
-      <div class="section-eyebrow">Run Line</div>
-      <div class="section-heading">
-        Track record
-        <span class="section-heading-tag deployed">Deployed</span>
+        Predictions
+        <span class="section-heading-tag live">Live</span>
       </div>
       <p class="section-blurb">
-        Top Run Line pick per day at 5% edge floor. ~1 pick per day on most game days.
-        Backtest below covers April 2024 through August 2025. Live record starts at zero
-        on the day public picks begin.
+        Model win/draw/loss probabilities for upcoming fixtures. Host nations (USA, Canada,
+        Mexico) carry a home-field adjustment. Probabilities are the product — the "pick"
+        column is just the single most likely outcome.
       </p>
-
-      <!-- BACKTEST sub-section -->
-      <div class="subsection-eyebrow">Backtest performance</div>
-      <div class="subsection-heading">
-        April 2024 — August 2025
-        <span class="section-heading-tag backtest">Backtest</span>
+      <div class="match-table-wrap">
+        <div class="match-table-header">
+          <span>Win / Draw / Loss probability</span>
+          <span id="matches-updated" style="text-transform:none;color:var(--accent);"></span>
+        </div>
+        <table class="match-table">
+          <thead>
+            <tr><th>Date</th><th>Match</th><th>Win</th><th>Draw</th><th>Loss</th><th>Most likely</th></tr>
+          </thead>
+          <tbody id="matches-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Loading predictions…</td></tr>
+          </tbody>
+        </table>
       </div>
+    </section>
+  </div>
+
+  <!-- ══ OPEN LEDGER ══ -->
+  <div class="page" id="page-ledger">
+    <section class="fade-in">
+      <div class="section-eyebrow">The Open Ledger</div>
+      <div class="section-heading">Every prediction, graded</div>
+      <p class="section-blurb">
+        The whole point. Every match prediction is published before kickoff and graded here
+        afterward — wins and losses both, permanently. The git history is the proof: each
+        prediction is timestamped in a public repository before the match is played.
+      </p>
 
       <div class="stat-grid">
         <div class="stat-cell">
-          <div class="stat-label">Picks</div>
-          <div class="stat-value text" id="bt-rl-n">251</div>
-          <div class="stat-sub">at top-1/day</div>
+          <div class="stat-label">Matches graded</div>
+          <div class="stat-value text" id="led-n">0</div>
+          <div class="stat-sub">live, since June 11</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-label">Win rate</div>
-          <div class="stat-value text" id="bt-rl-wp">59.0%</div>
-          <div class="stat-sub">148W — 103L</div>
+          <div class="stat-label">Brier score</div>
+          <div class="stat-value green" id="led-brier">—</div>
+          <div class="stat-sub">lower = sharper · 0.25 = coin-flip</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-label">ROI</div>
-          <div class="stat-value blue" id="bt-rl-roi">+10.58%</div>
-          <div class="stat-sub">flat-stake</div>
+          <div class="stat-label">Top-pick rate</div>
+          <div class="stat-value text" id="led-acc">—</div>
+          <div class="stat-sub">3-way · ~50% is strong</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-label">Median CLV</div>
-          <div class="stat-value blue" id="bt-rl-clv">+1.80%</div>
-          <div class="stat-sub">vs DK close</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Beat close</div>
-          <div class="stat-value text" id="bt-rl-bc">60.7%</div>
-          <div class="stat-sub">of bets</div>
+          <div class="stat-label">Backtest Brier</div>
+          <div class="stat-value blue">0.150</div>
+          <div class="stat-sub">320 matches, 2006–22</div>
         </div>
       </div>
 
-      <div class="halves-table-wrap">
-        <div class="halves-table-header">
-          <span>Per-period breakdown</span>
-          <span class="consistency-badge">4 of 4 periods positive ROI · 4 of 4 positive CLV</span>
-        </div>
-        <table class="halves-table">
-          <thead>
-            <tr>
-              <th>Period</th>
-              <th>Dates</th>
-              <th>N</th>
-              <th>Win rate</th>
-              <th>ROI</th>
-              <th>CLV</th>
-            </tr>
-          </thead>
-          <tbody id="bt-rl-halves"></tbody>
-        </table>
-      </div>
-
-      <!-- LIVE sub-section -->
-      <div class="subsection-eyebrow">Live record</div>
-      <div class="subsection-heading">
-        Since launch
-        <span class="section-heading-tag deployed">Live</span>
-      </div>
-
-      <div class="live-callout">
-        <div class="live-callout-pre">Public picks begin at launch</div>
+      <div id="ledger-empty" class="live-callout">
+        <div class="live-callout-pre">Public grading begins June 11</div>
         <div class="live-callout-zero">0 — 0</div>
         <div class="live-callout-text">
-          The live record starts at zero on the day public picks begin. Every pick will be
-          posted before games start with opening odds, then graded automatically.
-          No retroactive edits.
+          The ledger starts empty and fills automatically as matches are played. Every
+          prediction was posted before kickoff and is graded against the actual result —
+          no retroactive edits. The backtest validation (Brier 0.150 across five World Cups)
+          is on <a href="#" onclick="showPage('how'); return false;" style="color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);">How it works</a>.
         </div>
+      </div>
+
+      <div id="ledger-table-wrap" class="match-table-wrap" style="display:none;">
+        <div class="match-table-header">
+          <span>Graded results — predicted vs actual</span>
+          <span id="ledger-updated" style="text-transform:none;color:var(--accent);"></span>
+        </div>
+        <table class="match-table">
+          <thead>
+            <tr><th>Date</th><th>Match</th><th>Result</th><th>Our probs (W/D/L)</th><th>Pick</th><th>Hit</th></tr>
+          </thead>
+          <tbody id="ledger-body"></tbody>
+        </table>
       </div>
     </section>
-
-    <div class="section-divider"></div>
-
-    <section class="fade-in d2">
-      <div class="section-eyebrow">Markets in development</div>
-      <div class="section-heading">
-        Not yet posting
-        <span class="section-heading-tag dev">In Development</span>
-      </div>
-      <p class="section-blurb">
-        Two markets that haven't yet met our deployment criteria. We're tracking them
-        privately and will add them publicly once they pass the same validation bar
-        Run Line cleared.
-      </p>
-
-      <div class="dev-grid">
-        <div class="dev-card">
-          <div class="dev-card-title">Moneyline</div>
-          <div class="dev-card-status">Tracking CLV — ROI not yet validated</div>
-          <div class="dev-card-body">
-            The Moneyline model produces a strong closing line value signal across our
-            backtest data, suggesting it's identifying mispriced lines. ROI hasn't yet
-            tracked the CLV signal, so we're holding it off the live product until both
-            indicators meet our deployment bar.
-          </div>
-          <div class="dev-card-stat-row">
-            <span>Backtest n: <strong>538</strong></span>
-            <span>CLV: <strong class="clv-pos">+2.95%</strong></span>
-          </div>
-        </div>
-
-        <div class="dev-card">
-          <div class="dev-card-title">Over / Under</div>
-          <div class="dev-card-status">v1.2.2 development underway</div>
-          <div class="dev-card-body">
-            The current totals model uses team-level batting aggregates which haven't
-            shown a CLV signal in our backtest data. v1.2.2 introduces lineup-confirmed
-            batter features (per-batter xwOBA indexed by handedness, weighted by lineup
-            spot) to address this directly.
-          </div>
-          <div class="dev-card-stat-row">
-            <span>Backtest n: <strong>620</strong></span>
-            <span>CLV: <strong class="clv-neu">+0.00%</strong></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ══ HISTORY ══ -->
-  <div class="page" id="page-history">
-
-    <section class="fade-in">
-      <div class="section-eyebrow">Pick history</div>
-      <div class="section-heading">
-        Every pick, every result
-      </div>
-      <p class="section-blurb">
-        Every Run Line pick will be logged here once public posting begins. Date, matchup,
-        side, opening odds, closing line value, and result. No retroactive edits. Filter
-        and sort to verify any claim about the track record.
-      </p>
-
-      <div class="history-empty">
-        <div class="today-empty-eyebrow">No live picks yet</div>
-        <div class="today-empty-title">History begins at launch</div>
-        <div class="today-empty-text">
-          Once daily Run Line picks start publishing, the full pick-by-pick history will
-          populate here automatically. For backtest performance, see the
-          <a href="#" onclick="showPage('record'); return false;" style="color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent);">Record</a> tab.
-        </div>
-      </div>
-    </section>
-
   </div>
 
   <!-- ══ HOW IT WORKS ══ -->
   <div class="page" id="page-how">
-
     <section class="fade-in">
       <div class="section-eyebrow">Methodology</div>
       <div class="section-heading">How this works</div>
       <p class="section-blurb">
-        True Line is built on a strict pre-commitment discipline: validation rules and
-        deployment criteria are locked in writing before results are known. The full
-        criteria are in the <a href="https://github.com/zbon0/trueline-tracker/blob/main/TRUELINE_DEPLOYMENT_CRITERIA.md" style="color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent);">deployment criteria doc</a>.
+        True Line is built on one principle: publish before, grade in public, claim only what
+        the numbers support. The model isn't exotic — what's rare is the honesty about what it
+        is and isn't.
       </p>
 
       <div class="methodology">
-
         <div class="method-row">
-          <div class="method-row-label">Model</div>
+          <div class="method-row-label">The model</div>
           <div class="method-row-body">
-            v1.2.1 — logistic regression for moneyline and run line win probability,
-            ridge regression for totals. Features include
-            <strong>Statcast pitcher rates</strong> (K%, BB%, HR/FB%, Barrel%, HardHit%, CSW%),
-            team-aggregated xwOBA, traditional WHIP, recent form, and park factors.
-            Re-trained daily on a rolling historical window.
+            An <strong>Elo rating system</strong> built from the full international match record
+            (every men's international since 1872, ~49,000 matches), updated match-by-match with
+            a margin-of-victory weighting. Win probability comes from the rating gap; an
+            <strong>empirical draw model</strong> splits it into win/draw/loss; host nations get
+            a home-field adjustment.
           </div>
         </div>
-
         <div class="method-row">
-          <div class="method-row-label">Selection</div>
+          <div class="method-row-label">Calibration</div>
           <div class="method-row-body">
-            For Run Line: top 1 pick per day where the model's edge over the opening
-            DraftKings price exceeds 5%. Some days have no qualifying pick — we don't
-            force content. Approximately 78% of game days produce a pick.
+            The model is <strong>calibrated, not edge-claiming</strong>. Validated across 320
+            World Cup matches (2006–2022): when it says 60%, the outcome happens about 60% of the
+            time. <strong>Brier score 0.150</strong> (0.25 is a coin-flip; lower is sharper) —
+            consistent across all five tournaments tested.
+            <table class="calib-table">
+              <thead><tr><th>Predicted</th><th>Actual</th><th>Matches</th></tr></thead>
+              <tbody>
+                <tr><td>~14%</td><td>19%</td><td>36</td></tr>
+                <tr><td>~28%</td><td>30%</td><td>41</td></tr>
+                <tr><td>~42%</td><td>39%</td><td>60</td></tr>
+                <tr><td>~57%</td><td>63%</td><td>48</td></tr>
+                <tr><td>~72%</td><td>68%</td><td>71</td></tr>
+                <tr><td>~88%</td><td>84%</td><td>64</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-
         <div class="method-row">
-          <div class="method-row-label">Closing line value</div>
+          <div class="method-row-label">What it is not</div>
           <div class="method-row-body">
-            Every pick is recorded at the opening DraftKings price. After games start,
-            we measure CLV against the closing price. <strong>Positive CLV is the leading
-            indicator of genuine edge</strong> — it means the books moved toward our pick
-            after we made it. ROI is the lagging indicator and has more variance.
+            This is <strong>not a claim to beat the bookmakers</strong>. The model's probabilities
+            are honest and well-calibrated — roughly in line with efficient market prices, which is
+            exactly what an honest model should be. We publish sound probabilities and grade them in
+            public. We don't sell the fantasy of a secret edge.
           </div>
         </div>
-
         <div class="method-row">
-          <div class="method-row-label">Deployment bar</div>
+          <div class="method-row-label">The open ledger</div>
           <div class="method-row-body">
-            A market only goes live publicly if backtest data shows aggregate positive ROI,
-            aggregate positive CLV, AND positive ROI and CLV in every individual test period.
-            Run Line cleared all five criteria. Moneyline and Over/Under haven't yet — they
-            stay in development until they do.
+            Every prediction is committed to a <strong>public repository before kickoff</strong>,
+            so the timestamp is verifiable — no cherry-picking, no quiet deletions. After each match,
+            it's graded against the actual result. Win or lose, it stays on the record.
           </div>
         </div>
-
         <div class="method-row">
-          <div class="method-row-label">Audit trigger</div>
+          <div class="method-row-label">Roadmap</div>
           <div class="method-row-body">
-            A deployed market is automatically paused if any of these fire on a rolling
-            100-pick window of live picks: median CLV falls below −1%, ROI falls below
-            −10%, or both ROI and CLV go negative simultaneously. The pause is publicly
-            disclosed; the market doesn't resume without re-validation.
+            World Cup first. The same transparent, calibrated approach extends to club soccer and
+            other sports after the tournament — always published-before, graded-in-public.
           </div>
         </div>
-
-        <div class="method-row">
-          <div class="method-row-label">Display unit</div>
-          <div class="method-row-body">
-            All public picks shown in <strong>units</strong> (1u = 1 unit). This is the
-            standard sports-betting convention, allowing each customer to scale to their
-            own bankroll. The operator's personal stake size is internal and not part of
-            the public display.
-          </div>
-        </div>
-
-        <div class="method-row">
-          <div class="method-row-label">History</div>
-          <div class="method-row-body">
-            True Line had earlier model versions that are <em>not</em> reflected in the
-            live record.
-            <div class="history-note">
-              <strong>v1.0 (April 2025):</strong> Briefly live, paused after we caught a
-              settlement bug in run line tracking that inflated recorded results.
-              <strong>v1.1 (April 2026):</strong> Production-deployed but never validated
-              against our current criteria. Results were not posted publicly.
-              <strong>v1.2.1 (May 2026):</strong> The model deployed here. Validated
-              against 1.5 seasons of backtest data including a full out-of-sample 2025
-              test. Modest validation per pre-committed rules — strong CLV signal, modest
-              ROI improvement over baseline. Run Line met all deployment criteria;
-              Moneyline and Over/Under did not.
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div class="disclaimer">
         <strong style="color:var(--text);">Disclaimer:</strong>
-        Picks are generated by a statistical model for informational and entertainment
-        purposes only. Past performance does not guarantee future results. Sports betting
-        involves risk — never wager more than you can afford to lose. If gambling is
-        causing problems for you or someone you know, call 1-800-GAMBLER.
+        Predictions are generated by a statistical model for informational and entertainment
+        purposes only. They are probability estimates, not guarantees, and are not a claim to
+        beat any bookmaker. Past performance does not guarantee future results. If you choose to
+        bet, never wager more than you can afford to lose. If gambling is causing problems for you
+        or someone you know, call 1-800-GAMBLER.
       </div>
     </section>
+  </div>
 
+  <!-- ══ MLB (in development, honest) ══ -->
+  <div class="page" id="page-mlb">
+    <section class="fade-in">
+      <div class="section-eyebrow">MLB</div>
+      <div class="section-heading">
+        In development
+        <span class="section-heading-tag dev">Paused</span>
+      </div>
+      <p class="section-blurb">
+        True Line started as an MLB run-line model. Here's the honest status — including why
+        it isn't live.
+      </p>
+
+      <div class="methodology">
+        <div class="method-row">
+          <div class="method-row-label">What happened</div>
+          <div class="method-row-body">
+            The run-line model <strong>backtested well</strong> (+10.58% ROI, positive across four
+            historical periods). But the test that matters is forward, not backward —
+            and in <strong>live forward-testing the edge did not hold</strong>. Backtested edges in
+            efficient betting markets very often fail to persist; catching that with discipline,
+            rather than publishing it anyway, is the whole point of this brand.
+            <div class="history-note">
+              <strong>The honest read:</strong> a backtest that looks like an edge and a forward
+              test that says otherwise is the most common outcome in sports betting. We'd rather
+              show you that than sell you a record that won't repeat. The MLB model is paused and
+              in development — it isn't posting picks, and it won't until forward results justify it.
+            </div>
+          </div>
+        </div>
+        <div class="method-row">
+          <div class="method-row-label">Why it's here</div>
+          <div class="method-row-body">
+            Transparency cuts both ways. If we're going to grade our World Cup predictions in
+            public, we're going to be equally honest about the model that <em>didn't</em> work out.
+            That's the standard.
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
 </main>
 
 <footer>
-  <span id="footer-updated">Pre-launch · v2 dashboard · May 2026</span>
+  <span id="footer-updated">World Cup 2026 · True Line</span>
   <span><a href="https://github.com/zbon0/trueline-tracker">View source</a></span>
 </footer>
 
 <script>
-let DATA = null;
+const PROBS_URL = 'wc2026_predictions.json';
+const LEDGER_URL = 'wc2026_ledger.json';
+const SUMMARY_URL = 'wc2026_summary.json';
 
-function fmtPct(n, withSign = true) {
-  if (n === null || n === undefined) return '—';
-  const v = parseFloat(n);
-  return (withSign && v >= 0 ? '+' : '') + v.toFixed(2) + '%';
-}
+function pct(n) { return Math.round(parseFloat(n) * 100) + '%'; }
+function probClass(p, isMax) { return isMax ? 'prob fav' : (p >= 0.25 ? 'prob mid' : 'prob dog'); }
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1027,59 +407,71 @@ function showPage(name) {
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function renderHalves() {
-  if (!DATA?.backtest_record?.run_line_per_half) return;
-  const tbody = document.getElementById('bt-rl-halves');
-  if (!tbody) return;
-  let html = '';
-  DATA.backtest_record.run_line_per_half.forEach(h => {
-    const roiClass = h.roi_pct > 0 ? 'pos' : h.roi_pct < 0 ? 'neg' : 'neu';
-    const clvClass = h.median_clv_pct > 0 ? 'pos' : h.median_clv_pct < 0 ? 'neg' : 'neu';
-    html += `<tr>
-      <td><strong>${h.period}</strong></td>
-      <td style="color: var(--muted);">${h.dates}</td>
-      <td>${h.n}</td>
-      <td>${h.win_pct.toFixed(1)}%</td>
-      <td class="${roiClass}">${fmtPct(h.roi_pct)}</td>
-      <td class="${clvClass}">${fmtPct(h.median_clv_pct)}</td>
-    </tr>`;
-  });
-  const s = DATA.backtest_record.run_line_summary;
-  html += `<tr class="total-row">
-    <td><strong>Combined</strong></td>
-    <td style="color: var(--muted);">all periods</td>
-    <td>${s.n}</td>
-    <td>${s.win_pct.toFixed(1)}%</td>
-    <td class="pos">${fmtPct(s.roi_pct)}</td>
-    <td class="pos">${fmtPct(s.median_clv_pct)}</td>
-  </tr>`;
-  tbody.innerHTML = html;
+function pickLabel(row) {
+  if (row.pick === 'team1 win') return row.team1 + ' win';
+  if (row.pick === 'team2 win') return row.team2 + ' win';
+  return 'Draw';
 }
 
-function renderBacktestStats() {
-  if (!DATA?.backtest_record?.run_line_summary) return;
-  const s = DATA.backtest_record.run_line_summary;
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set('bt-rl-n', s.n);
-  set('bt-rl-wp', s.win_pct.toFixed(1) + '%');
-  set('bt-rl-roi', fmtPct(s.roi_pct));
-  set('bt-rl-clv', fmtPct(s.median_clv_pct));
-  set('bt-rl-bc', s.beat_close_pct.toFixed(1) + '%');
-}
-
-async function loadData() {
+async function loadMatches() {
   try {
-    const r = await fetch('/tracker_data.json?v=' + Date.now());
-    if (!r.ok) throw new Error('Fetch failed');
-    DATA = await r.json();
-    renderHalves();
-    renderBacktestStats();
+    const r = await fetch(PROBS_URL + '?v=' + Date.now());
+    const data = await r.json();
+    const tbody = document.getElementById('matches-body');
+    // show upcoming only (predictions file is all fixtures); cap to next ~24 for readability
+    const rows = data.slice(0, 24);
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">No upcoming matches.</td></tr>'; return; }
+    tbody.innerHTML = rows.map(row => {
+      const probs = [row.P_win, row.P_draw, row.P_loss];
+      const mx = Math.max(...probs);
+      const host = row.host_game ? '<span class="host-tag">host</span>' : '';
+      return `<tr>
+        <td class="date-cell">${row.date}</td>
+        <td class="teams">${row.team1} <span style="color:var(--muted);">v</span> ${row.team2}${host}</td>
+        <td class="${probClass(row.P_win, row.P_win===mx)}">${pct(row.P_win)}</td>
+        <td class="${probClass(row.P_draw, row.P_draw===mx)}">${pct(row.P_draw)}</td>
+        <td class="${probClass(row.P_loss, row.P_loss===mx)}">${pct(row.P_loss)}</td>
+        <td><span class="pick-pill">${pickLabel(row)}</span></td>
+      </tr>`;
+    }).join('');
   } catch(e) {
-    console.error('Data load failed:', e);
+    document.getElementById('matches-body').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
+    console.error('matches load failed', e);
   }
 }
 
-loadData();
+async function loadLedger() {
+  try {
+    const [lr, sr] = await Promise.all([
+      fetch(LEDGER_URL + '?v=' + Date.now()).then(x => x.json()).catch(() => []),
+      fetch(SUMMARY_URL + '?v=' + Date.now()).then(x => x.json()).catch(() => null)
+    ]);
+    if (sr) {
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      set('led-n', sr.matches_graded ?? 0);
+      set('led-brier', sr.mean_brier != null ? sr.mean_brier.toFixed(3) : '—');
+      set('led-acc', sr.pick_accuracy != null ? Math.round(sr.pick_accuracy * 100) + '%' : '—');
+    }
+    if (lr && lr.length) {
+      document.getElementById('ledger-empty').style.display = 'none';
+      document.getElementById('ledger-table-wrap').style.display = 'block';
+      document.getElementById('ledger-body').innerHTML = lr.map(m => {
+        const pk = m.pick === 'team1 win' ? m.team1+' win' : m.pick === 'team2 win' ? m.team2+' win' : 'Draw';
+        return `<tr>
+          <td class="date-cell">${m.date}</td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}</td>
+          <td class="prob mid">${m.result}</td>
+          <td class="prob">${pct(m.P_win)} / ${pct(m.P_draw)} / ${pct(m.P_loss)}</td>
+          <td><span class="pick-pill">${pk}</span></td>
+          <td class="${m.hit ? 'hit-yes' : 'hit-no'}">${m.hit ? '✓' : '✗'}</td>
+        </tr>`;
+      }).join('');
+    }
+  } catch(e) { console.error('ledger load failed', e); }
+}
+
+loadMatches();
+loadLedger();
 </script>
 </body>
 </html>
