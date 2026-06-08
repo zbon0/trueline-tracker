@@ -157,8 +157,9 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
       <h1>The line,<br>in the <em>open.</em></h1>
       <p class="hero-sub">
         Calibrated win/draw/loss probabilities for every 2026 World Cup match — published
-        before kickoff and graded in public, win or lose. Not tips, not hype: an honest
-        model, validated against 20 years of World Cups, with its record laid bare.
+        before kickoff, shown against the market line, and graded in public. Not tips, not
+        hype: an honest model, validated against 20 years of World Cups, with every call
+        laid bare on the ledger.
       </p>
     </section>
 
@@ -173,28 +174,56 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
       </div>
     </div>
 
+    <!-- WHERE WE DIFFER — flagship sharp content -->
     <section class="fade-in d3">
-      <div class="section-eyebrow">Upcoming matches</div>
+      <div class="section-eyebrow">The interesting part</div>
       <div class="section-heading">
-        Predictions
+        Where we differ from the market
         <span class="section-heading-tag live">Live</span>
       </div>
       <p class="section-blurb">
-        Model win/draw/loss probabilities for upcoming fixtures. Host nations (USA, Canada,
-        Mexico) carry a home-field adjustment. Probabilities are the product — the "pick"
-        column is just the single most likely outcome.
+        These are the matches where our model's read diverges most from the betting market.
+        We're not claiming the market is wrong — it usually knows more than we do (injuries,
+        lineups, late news). These are simply where our model is most <strong style="color:var(--text);">testable</strong>:
+        we've published our number, the market has published theirs, and the result settles it.
+        Watch the <a href="#" onclick="showPage('ledger'); return false;" style="color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);">ledger</a>.
       </p>
       <div class="match-table-wrap">
         <div class="match-table-header">
-          <span>Win / Draw / Loss probability</span>
+          <span>Model vs. market — biggest divergences</span>
+          <span id="diff-updated" style="text-transform:none;color:var(--accent);"></span>
+        </div>
+        <table class="match-table">
+          <thead>
+            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th><th>We lean</th></tr>
+          </thead>
+          <tbody id="diff-body">
+            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ALL MATCHES -->
+    <section class="fade-in d3">
+      <div class="section-eyebrow">All upcoming matches</div>
+      <div class="section-heading">Full slate</div>
+      <p class="section-blurb">
+        Model win/draw/loss probabilities for every fixture, with the market's de-vigged
+        implied probabilities alongside. Host nations (USA, Canada, Mexico) carry a
+        home-field adjustment.
+      </p>
+      <div class="match-table-wrap">
+        <div class="match-table-header">
+          <span>Our probabilities vs. the market</span>
           <span id="matches-updated" style="text-transform:none;color:var(--accent);"></span>
         </div>
         <table class="match-table">
           <thead>
-            <tr><th>Date</th><th>Match</th><th>Win</th><th>Draw</th><th>Loss</th><th>Most likely</th></tr>
+            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th></tr>
           </thead>
           <tbody id="matches-body">
-            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Loading predictions…</td></tr>
+            <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">Loading predictions…</td></tr>
           </tbody>
         </table>
       </div>
@@ -407,35 +436,62 @@ function showPage(name) {
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function pickLabel(row) {
-  if (row.pick === 'team1 win') return row.team1 + ' win';
-  if (row.pick === 'team2 win') return row.team2 + ' win';
-  return 'Draw';
+function probTriple(w, d, l) {
+  const mx = Math.max(w, d, l);
+  const cell = (p) => `<span class="${p===mx ? 'prob fav' : (p>=0.25 ? 'prob mid' : 'prob dog')}">${pct(p)}</span>`;
+  return `${cell(w)} / ${cell(d)} / ${cell(l)}`;
 }
 
 async function loadMatches() {
   try {
     const r = await fetch(PROBS_URL + '?v=' + Date.now());
     const data = await r.json();
-    const tbody = document.getElementById('matches-body');
-    // show upcoming only (predictions file is all fixtures); cap to next ~24 for readability
-    const rows = data.slice(0, 24);
-    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">No upcoming matches.</td></tr>'; return; }
-    tbody.innerHTML = rows.map(row => {
-      const probs = [row.P_win, row.P_draw, row.P_loss];
-      const mx = Math.max(...probs);
-      const host = row.host_game ? '<span class="host-tag">host</span>' : '';
-      return `<tr>
-        <td class="date-cell">${row.date}</td>
-        <td class="teams">${row.team1} <span style="color:var(--muted);">v</span> ${row.team2}${host}</td>
-        <td class="${probClass(row.P_win, row.P_win===mx)}">${pct(row.P_win)}</td>
-        <td class="${probClass(row.P_draw, row.P_draw===mx)}">${pct(row.P_draw)}</td>
-        <td class="${probClass(row.P_loss, row.P_loss===mx)}">${pct(row.P_loss)}</td>
-        <td><span class="pick-pill">${pickLabel(row)}</span></td>
-      </tr>`;
-    }).join('');
+
+    // --- "Where we differ" flagship: matched fixtures sorted by disagreement ---
+    const matched = data.filter(m => m.mkt_matched && m.max_disagreement != null);
+    matched.sort((a, b) => b.max_disagreement - a.max_disagreement);
+    const diffBody = document.getElementById('diff-body');
+    const topDiff = matched.slice(0, 12);
+    if (topDiff.length) {
+      diffBody.innerHTML = topDiff.map(m => {
+        const host = m.host_game ? '<span class="host-tag">host</span>' : '';
+        const leanTxt = m.lean_amount > 0
+          ? `<span class="pick-pill">${m.lean_outcome} +${Math.round(m.lean_amount*100)}%</span>`
+          : '<span style="color:var(--muted);">in line</span>';
+        return `<tr>
+          <td class="date-cell">${m.date}</td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
+          <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
+          <td>${probTriple(m.mkt_win, m.mkt_draw, m.mkt_loss)}</td>
+          <td>${leanTxt}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      diffBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Market lines not posted yet — divergences appear as books open these matches.</td></tr>';
+    }
+
+    // --- Full slate: all upcoming, chronological ---
+    const slate = data.slice(0, 32);
+    const matchesBody = document.getElementById('matches-body');
+    if (slate.length) {
+      matchesBody.innerHTML = slate.map(m => {
+        const host = m.host_game ? '<span class="host-tag">host</span>' : '';
+        const market = m.mkt_matched
+          ? probTriple(m.mkt_win, m.mkt_draw, m.mkt_loss)
+          : '<span style="color:var(--muted);">n/a</span>';
+        return `<tr>
+          <td class="date-cell">${m.date}</td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
+          <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
+          <td>${market}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      matchesBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">No upcoming matches.</td></tr>';
+    }
   } catch(e) {
-    document.getElementById('matches-body').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
+    document.getElementById('matches-body').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
+    document.getElementById('diff-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
     console.error('matches load failed', e);
   }
 }
