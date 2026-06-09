@@ -71,6 +71,7 @@ main { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; paddin
 .match-table th { background: var(--bg3); font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; padding: 10px 18px; text-align: left; border-bottom: 1px solid var(--border); }
 .match-table td { padding: 13px 18px; border-bottom: 1px solid rgba(30,37,48,0.6); font-family: var(--mono); font-size: 12px; vertical-align: middle; }
 .match-table tr:last-child td { border-bottom: none; }
+.match-table tbody tr[onclick]:hover td { background: rgba(0,229,176,0.04); }
 .match-table .teams { font-family: var(--sans); font-size: 13.5px; color: var(--text); font-weight: 400; }
 .match-table .date-cell { color: var(--muted); font-size: 11px; white-space: nowrap; }
 .prob { font-family: var(--mono); font-size: 12px; }
@@ -454,6 +455,19 @@ function probTriple(w, d, l) {
   return `${cell(w)} / ${cell(d)} / ${cell(l)}`;
 }
 
+// matches the Python slug() in wc_pages.py so links resolve to the right page
+function matchSlug(t1, t2) {
+  return `${t1}-vs-${t2}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+// a probability bar: visual W/D/L split, reads faster than numbers
+function probBar(w, d, l) {
+  return `<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;width:100%;min-width:90px;">
+    <div style="width:${w*100}%;background:var(--accent);"></div>
+    <div style="width:${d*100}%;background:var(--muted);"></div>
+    <div style="width:${l*100}%;background:var(--accent-dim);"></div>
+  </div>`;
+}
+
 async function loadMatches() {
   try {
     const r = await fetch(PROBS_URL + '?v=' + Date.now());
@@ -470,9 +484,10 @@ async function loadMatches() {
         const leanTxt = m.lean_amount > 0
           ? `<span class="pick-pill">${m.lean_outcome} +${Math.round(m.lean_amount*100)}%</span>`
           : '<span style="color:var(--muted);">in line</span>';
-        return `<tr>
+        const url = `matches/${matchSlug(m.team1, m.team2)}.html`;
+        return `<tr onclick="location.href='${url}'" style="cursor:pointer;">
           <td class="date-cell">${m.date}</td>
-          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host} <span style="color:var(--accent);font-size:10px;">→</span></td>
           <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
           <td>${probTriple(m.mkt_win, m.mkt_draw, m.mkt_loss)}</td>
           <td>${leanTxt}</td>
@@ -491,9 +506,10 @@ async function loadMatches() {
         const market = m.mkt_matched
           ? probTriple(m.mkt_win, m.mkt_draw, m.mkt_loss)
           : '<span style="color:var(--muted);">n/a</span>';
-        return `<tr>
+        const url = `matches/${matchSlug(m.team1, m.team2)}.html`;
+        return `<tr onclick="location.href='${url}'" style="cursor:pointer;">
           <td class="date-cell">${m.date}</td>
-          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host} <span style="color:var(--accent);font-size:10px;">→</span></td>
           <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
           <td>${market}</td>
         </tr>`;
