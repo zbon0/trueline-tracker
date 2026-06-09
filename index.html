@@ -139,10 +139,10 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
     <span class="nav-brand">True Line</span>
   </a>
   <div class="nav-links">
-    <button class="nav-link active" onclick="showPage('matches')">Matches</button>
+    <button class="nav-link active" onclick="showPage('matches')">Predictions</button>
+    <a class="nav-link" href="matches/">Match Pages</a>
     <button class="nav-link" onclick="showPage('ledger')">Open Ledger</button>
     <button class="nav-link" onclick="showPage('how')">How it works</button>
-    <button class="nav-link" onclick="showPage('mlb')">MLB</button>
   </div>
 </nav>
 
@@ -187,6 +187,7 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
         We're not claiming the market is wrong — it usually knows more than we do (injuries,
         lineups, late news). These are simply where our model is most <strong style="color:var(--text);">testable</strong>:
         we've published our number, the market has published theirs, and the result settles it.
+        <strong style="color:var(--accent);">Click any match for the full breakdown.</strong>
         Watch the <a href="#" onclick="showPage('ledger'); return false;" style="color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);">ledger</a>.
       </p>
       <div class="match-table-wrap">
@@ -196,10 +197,10 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
         </div>
         <table class="match-table">
           <thead>
-            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th><th>We lean</th></tr>
+            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th><th>We lean</th><th></th></tr>
           </thead>
           <tbody id="diff-body">
-            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Loading…</td></tr>
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Loading…</td></tr>
           </tbody>
         </table>
       </div>
@@ -221,10 +222,10 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
         </div>
         <table class="match-table">
           <thead>
-            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th></tr>
+            <tr><th>Date</th><th>Match</th><th>Our read (W/D/L)</th><th>Market (W/D/L)</th><th></th></tr>
           </thead>
           <tbody id="matches-body">
-            <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">Loading predictions…</td></tr>
+            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Loading predictions…</td></tr>
           </tbody>
         </table>
       </div>
@@ -428,7 +429,7 @@ footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 <footer>
   <span id="footer-updated">World Cup 2026 · True Line</span>
-  <span><a href="https://github.com/zbon0/trueline-tracker">View source</a></span>
+  <span><a href="#" onclick="showPage('mlb'); return false;">MLB (in development)</a> · <a href="https://github.com/zbon0/trueline-tracker">View source</a></span>
 </footer>
 
 <script>
@@ -487,14 +488,15 @@ async function loadMatches() {
         const url = `matches/${matchSlug(m.team1, m.team2)}.html`;
         return `<tr onclick="location.href='${url}'" style="cursor:pointer;">
           <td class="date-cell">${m.date}</td>
-          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host} <span style="color:var(--accent);font-size:10px;">→</span></td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
           <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
           <td>${probTriple(m.mkt_win, m.mkt_draw, m.mkt_loss)}</td>
           <td>${leanTxt}</td>
+          <td style="text-align:right;white-space:nowrap;"><span style="color:var(--accent);font-family:var(--mono);font-size:11px;">analysis →</span></td>
         </tr>`;
       }).join('');
     } else {
-      diffBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Market lines not posted yet — divergences appear as books open these matches.</td></tr>';
+      diffBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Market lines not posted yet — divergences appear as books open these matches.</td></tr>';
     }
 
     // --- Full slate: all upcoming, chronological ---
@@ -509,17 +511,18 @@ async function loadMatches() {
         const url = `matches/${matchSlug(m.team1, m.team2)}.html`;
         return `<tr onclick="location.href='${url}'" style="cursor:pointer;">
           <td class="date-cell">${m.date}</td>
-          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host} <span style="color:var(--accent);font-size:10px;">→</span></td>
+          <td class="teams">${m.team1} <span style="color:var(--muted);">v</span> ${m.team2}${host}</td>
           <td>${probTriple(m.P_win, m.P_draw, m.P_loss)}</td>
           <td>${market}</td>
+          <td style="text-align:right;white-space:nowrap;"><span style="color:var(--accent);font-family:var(--mono);font-size:11px;">analysis →</span></td>
         </tr>`;
       }).join('');
     } else {
-      matchesBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">No upcoming matches.</td></tr>';
+      matchesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">No upcoming matches.</td></tr>';
     }
   } catch(e) {
-    document.getElementById('matches-body').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
-    document.getElementById('diff-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
+    document.getElementById('matches-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
+    document.getElementById('diff-body').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">Predictions will appear here shortly.</td></tr>';
     console.error('matches load failed', e);
   }
 }
